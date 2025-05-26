@@ -1,0 +1,73 @@
+/* 전역 세팅 */
+:root {
+  --primary-bg: #ffffff;
+  --sidebar-bg: linear-gradient(135deg, #667eea, #764ba2);
+  --kpi-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  --border-radius: 12px;
+  --transition: 0.3s ease;
+  --font-family: 'Noto Sans KR', sans-serif;
+}
+
+* {
+  margin: 0; padding: 0; box-sizing: border-box;
+  font-family: var(--font-family);
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+/* 사이드바 */
+.sidebar {
+  width: 240px;
+  background: var(--sidebar-bg);
+  color: #fff;
+  flex-shrink: 0;
+  transition: width var(--transition);
+}
+.sidebar .sidebar-header h2 {
+  color: #fff;
+}
+.sidebar .nav-link {
+  color: rgba(255,255,255,0.9);
+  padding: 12px 20px;
+  transition: background var(--transition);
+}
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* 메인 컨텐츠 */
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+.navbar {
+  border-bottom: 1px solid #eaeaea;
+}
+
+/* KPI 카드 */
+.KPI-card {
+  border-radius: var(--border-radius);
+  transition: transform var(--transition);
+}
+.KPI-card:hover {
+  transform: translateY(-4px);
+}
+.KPI-card i {
+  opacity: 0.8;
+}
+
+/* 반응형 사이드바 토글 */
+#sidebar.show {
+  width: 0;
+}
+@media (max-width: 992px) {
+  .sidebar { position: fixed; left: -240px; top: 0; height: 100%; z-index: 1030; }
+  .sidebar.show { left: 0; }
+  #main-content { margin-left: 0; }
+}
