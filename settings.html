@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>설정</title>
+
+    <!-- 구글 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet" />
+    <!-- Bootstrap -->
+    <link href="bootstrap-4.6.2-dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- 공통 스타일 -->
+    <link href="CSS/common.css" rel="stylesheet" />
+    <!-- 대시보드 스타일 -->
+    <link href="CSS/Dashboard.css" rel="stylesheet" />
+    <!-- 설정 스타일 -->
+    <link href="CSS/settings.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- 사이드바 -->
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-store"></i>
+            <h2>무인 매장 관리</h2>
+        </div>
+        <nav>
+            <a href="index.html" class="nav-link"><i class="fas fa-home"></i>대시보드</a>
+            <a href="products.html" class="nav-link"><i class="fas fa-boxes"></i>상품 관리</a>
+            <a href="orders.html" class="nav-link"><i class="fas fa-shopping-cart"></i>주문 관리</a>
+            <a href="inventory.html" class="nav-link"><i class="fas fa-warehouse"></i>재고 관리</a>
+            <a href="sales.html" class="nav-link"><i class="fas fa-chart-line"></i>매출 분석</a>
+            <a href="customers.html" class="nav-link"><i class="fas fa-users"></i>고객 관리</a>
+            <a href="settings.html" class="nav-link active"><i class="fas fa-cog"></i>설정</a>
+        </nav>
+    </aside>
+
+    <!-- 메인 컨테이너 -->
+    <div class="main-container">
+        <!-- 헤더 -->
+        <header class="header d-flex justify-content-between align-items-center">
+            <button id="mobileMenuBtn" class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+            <h1 class="header-title">설정</h1>
+            <div class="user-info">
+                <button class="notification-btn"><i class="fas fa-bell"></i><span
+                        class="notification-badge">3</span></button>
+                <span>관리자님</span>
+            </div>
+        </header>
+
+        <!-- 본문 -->
+        <main class="main-content container py-4">
+            <!-- 탭 네비게이션 -->
+            <ul class="nav nav-tabs" id="settingsTab">
+                <li class="nav-item"><a class="nav-link active" data-tab="account">계정 관리</a></li>
+                <li class="nav-item"><a class="nav-link" data-tab="store">스토어 프로필</a></li>
+                <li class="nav-item"><a class="nav-link" data-tab="notifications">알림 설정</a></li>
+            </ul>
+
+            <!-- 탭 컨텐츠 -->
+            <div class="tab-content mt-4">
+                <!-- 계정 관리 -->
+                <div class="tab-pane active" id="account">
+                    <div class="card mb-4">
+                        <div class="card-header">비밀번호 변경</div>
+                        <div class="card-body">
+                            <form id="accountForm">
+                                <div class="mb-3">
+                                    <label class="form-label">현재 비밀번호</label>
+                                    <input type="password" class="form-control" id="currentPassword" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">새 비밀번호</label>
+                                    <input type="password" class="form-control" id="newPassword" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">새 비밀번호 확인</label>
+                                    <input type="password" class="form-control" id="confirmPassword" required>
+                                </div>
+                                <button type="button" id="saveAccountBtn" class="btn btn-primary">저장</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- 스토어 프로필 -->
+                <div class="tab-pane d-none" id="store">
+                    <div class="card mb-4">
+                        <div class="card-header">매장 정보</div>
+                        <div class="card-body">
+                            <form id="storeForm">
+                                <div class="mb-3">
+                                    <label class="form-label">매장 이름</label>
+                                    <input type="text" class="form-control" id="storeName">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">연락처</label>
+                                    <input type="text" class="form-control" id="storeContact">
+                                </div>
+                                <button type="button" id="saveStoreBtn" class="btn btn-primary">저장</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- 알림 설정 -->
+                <div class="tab-pane d-none" id="notifications">
+                    <div class="card mb-4">
+                        <div class="card-header">재고 알림 임계값</div>
+                        <div class="card-body">
+                            <form id="notifyForm">
+                                <div class="mb-3">
+                                    <label class="form-label">재고 부족 알림 (개수 이하)</label>
+                                    <input type="number" class="form-control" id="lowStockThreshold" min="0">
+                                </div>
+                                <button type="button" id="saveNotifyBtn" class="btn btn-primary">저장</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 스크립트 -->
+    <script src="bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="JS/common.js"></script>
+    <script src="JS/settings.js"></script>
+</body>
+
+</html>
