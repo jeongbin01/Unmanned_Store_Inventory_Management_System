@@ -1,32 +1,61 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const tblBody = document.getElementById('orderTableBody');
-  const searchInput = document.getElementById('orderSearch');
-  let orders = [
-    { id: 101, customer: '홍길동', items: 3, total: 9000, status: '완료', time: '2025-05-26 14:32' },
-    { id: 102, customer: '김영희', items: 1, total: 3500, status: '대기', time: '2025-05-26 15:10' },
-    { id: 103, customer: '이철수', items: 2, total: 6500, status: '취소', time: '2025-05-25 11:05' }
-  ];
+let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
-  function renderTable(filter='') {
-    tblBody.innerHTML = '';
-    orders
-      .filter(o => 
-         o.customer.includes(filter) ||
-         o.status.includes(filter) ||
-         String(o.id).includes(filter))
-      .forEach(o => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${o.id}</td>
-          <td>${o.customer}</td>
-          <td>${o.items}개</td>
-          <td>${o.total.toLocaleString()}원</td>
-          <td>${o.status}</td>
-          <td>${o.time}</td>`;
-        tblBody.appendChild(tr);
-      });
-  }
+function renderOrders() {
+    const tbody = document.getElementById("orderList");
+    tbody.innerHTML = "";
 
-  searchInput.addEventListener('input', () => renderTable(searchInput.value));
-  renderTable();
-});
+    orders.forEach((o, i) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+      <td>#${o.id}</td>
+      <td>${o.customer}</td>
+      <td>₩${o.amount.toLocaleString()}</td>
+      <td><span class="status ${o.status}">${getStatusLabel(o.status)}</span></td>
+      <td>
+        <select onchange="updateOrderStatus(${i}, this.value)">
+          <option value="pending" ${o.status === "pending" ? "selected" : ""}>접수</option>
+          <option value="processing" ${o.status === "processing" ? "selected" : ""}>처리중</option>
+          <option value="completed" ${o.status === "completed" ? "selected" : ""}>완료</option>
+          <option value="cancelled" ${o.status === "cancelled" ? "selected" : ""}>취소</option>
+        </select>
+      </td>
+      <td><button class="btn btn-sm btn-outline" onclick="showOrderDetail(${i})">보기</button></td>
+    `;
+        tbody.appendChild(row);
+    });
+}
+
+function getStatusLabel(status) {
+    const labels = {
+        pending: "접수",
+        processing: "처리중",
+        completed: "완료",
+        cancelled: "취소",
+    };
+    return labels[status] || status;
+}
+
+function updateOrderStatus(index, status) {
+    orders[index].status = status;
+    localStorage.setItem("orders", JSON.stringify(orders));
+    renderOrders();
+}
+
+function showOrderDetail(index) {
+    const order = orders[index];
+    const box = document.getElementById("orderDetailBox");
+
+    box.innerHTML = `
+    <p><strong>주문번호:</strong> #${order.id}</p>
+    <p><strong>고객명:</strong> ${order.customer}</p>
+    <p><strong>금액:</strong> ₩${order.amount.toLocaleString()}</p>
+    <p><strong>상태:</strong> ${getStatusLabel(order.status)}</p>
+    <p><strong>상품목록:</strong></p>
+    <ul>
+      ${order.items.map(item => `<li>${item.name} (${item.quantity}개)</li>`).join("")}
+    </ul>
+  `;
+    openModal("orderDetailModal");
+}
+
+renderOrders();

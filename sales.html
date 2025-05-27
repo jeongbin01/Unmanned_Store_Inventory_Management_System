@@ -1,0 +1,62 @@
+<!-- sales.html -->
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>매출 분석 - 무인상점</title>
+    <link rel="stylesheet" href="libs/fontawesome.min.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/sales.css" />
+    <script src="libs/chart.min.js"></script>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <h2>무인상점</h2>
+        <a href="index.html" class="nav-link"><i class="fas fa-home"></i> 대시보드</a>
+        <a href="products.html" class="nav-link"><i class="fas fa-boxes"></i> 상품 관리</a>
+        <a href="orders.html" class="nav-link"><i class="fas fa-shopping-cart"></i> 주문 관리</a>
+        <a href="inventory.html" class="nav-link"><i class="fas fa-warehouse"></i> 재고 관리</a>
+        <a href="sales.html" class="nav-link active"><i class="fas fa-chart-line"></i> 매출 분석</a>
+    </aside>
+
+    <header class="header">
+        <h1>매출 분석</h1>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <section class="sales-charts">
+                <div class="chart-box">
+                    <h3>일별 매출</h3>
+                    <canvas id="dailySalesChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <h3>카테고리별 비율</h3>
+                    <canvas id="categorySalesChart"></canvas>
+                </div>
+            </section>
+
+            <section class="sales-table">
+                <h3>일자별 매출 내역</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>날짜</th>
+                            <th>판매건수</th>
+                            <th>매출합계</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesTableBody"></tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+
+    <script type="module" src="js/common.js"></script>
+    <script type="module" src="js/sales.js"></script>
+</body>
+
+</html>

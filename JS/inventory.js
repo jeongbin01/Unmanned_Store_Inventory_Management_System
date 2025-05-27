@@ -1,72 +1,54 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const tblBody = document.getElementById('inventoryTableBody');
-  const totalItemsEl = document.getElementById('invTotalItems');
-  const lowStockEl   = document.getElementById('invLowStock');
-  const adjustModalEl = document.getElementById('adjustModal');
-  const adjustModal   = new bootstrap.Modal(adjustModalEl);
-  const form          = document.getElementById('adjustForm');
-  const chartCtx      = document.getElementById('inventoryChart').getContext('2d');
+let products = JSON.parse(localStorage.getItem("products")) || [];
 
-  let items = [
-    { id: 1, name: '아메리카노', category: '음료', stock: 50 },
-    { id: 2, name: '카페라떼', category: '음료', stock: 30 },
-    { id: 3, name: '쿠키',         category: '디저트', stock: 10 },
-    { id: 4, name: '샌드위치',     category: '식사',   stock: 5 }
-  ];
+function renderInventory() {
+    const tbody = document.getElementById("inventoryList");
+    tbody.innerHTML = "";
 
-  function renderInventory() {
-    tblBody.innerHTML = '';
-    items.forEach(i => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${i.id}</td>
-        <td>${i.name}</td>
-        <td>${i.category}</td>
-        <td>${i.stock}개</td>
-        <td>
-          <button class="btn btn-sm btn-warning adjust-btn" data-id="${i.id}">
-            <i class="fas fa-edit"></i>
-          </button>
-        </td>`;
-      tblBody.appendChild(tr);
+    products.forEach((p, i) => {
+        const badge = getInventoryBadge(p.stock);
+        const row = document.createElement("tr");
+        row.innerHTML = `
+      <td>${p.name}</td>
+      <td>${p.category}</td>
+      <td>${p.stock}개</td>
+      <td><span class="badge ${badge.class}">${badge.label}</span></td>
+    `;
+        tbody.appendChild(row);
     });
-    totalItemsEl.textContent = items.length + '개';
-    lowStockEl.textContent   = items.filter(i => i.stock < 10).length + '개';
-    renderChart();
-  }
 
-  function renderChart() {
-    const byCat = {};
-    items.forEach(i => byCat[i.category] = (byCat[i.category]||0) + i.stock);
-    new Chart(chartCtx, {
-      type: 'bar',
-      data: {
-        labels: Object.keys(byCat),
-        datasets: [{ label: '재고 수량', data: Object.values(byCat), barPercentage: 0.6 }]
-      },
-      options: { responsive: true, plugins:{ legend:{ display:false } } }
+    // 드롭다운 옵션 동기화
+    const select = document.getElementById("stockProductSelect");
+    select.innerHTML = "";
+    products.forEach((p, i) => {
+        const option = document.createElement("option");
+        option.value = i;
+        option.textContent = p.name;
+        select.appendChild(option);
     });
-  }
+}
 
-  tblBody.addEventListener('click', e => {
-    if (e.target.closest('.adjust-btn')) {
-      const id = +e.target.closest('[data-id]').dataset.id;
-      const item = items.find(x => x.id === id);
-      form.adjustId.value = id;
-      document.getElementById('adjustName').textContent = `${item.name} (현재 ${item.stock}개)`;
-      form.adjustQty.value = '';
-      adjustModal.show();
+function getInventoryBadge(stock) {
+    if (stock === 0) return { class: "out", label: "품절" };
+    if (stock <= 5) return { class: "low", label: "부족" };
+    return { class: "in-stock", label: "충분" };
+}
+
+document.getElementById("saveStockBtn").addEventListener("click", () => {
+    const index = parseInt(document.getElementById("stockProductSelect").value);
+    const qty = parseInt(document.getElementById("stockQuantity").value);
+    const type = document.getElementById("stockType").value;
+
+    if (isNaN(qty) || qty < 1) return alert("수량을 입력하세요.");
+
+    if (type === "in") {
+        products[index].stock += qty;
+    } else {
+        products[index].stock = Math.max(0, products[index].stock - qty);
     }
-  });
 
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const id  = +form.adjustId.value;
-    const qty = +form.adjustQty.value;
-    items = items.map(i => i.id === id ? {...i, stock: i.stock + qty} : i);
-    adjustModal.hide();
+    localStorage.setItem("products", JSON.stringify(products));
     renderInventory();
-  });
-
-  renderInventory();
+    closeModal("stockModal");
 });
+
+renderInventory();

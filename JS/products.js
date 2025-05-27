@@ -1,96 +1,82 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const productModalEl = document.getElementById('productModal');
-  const productModal = new bootstrap.Modal(productModalEl);
-  const form       = document.getElementById('productForm');
-  const tblBody    = document.getElementById('productTableBody');
-  const searchInput= document.getElementById('searchInput');
-  const selectAll  = document.getElementById('selectAll');
-  let products = [
-    { id: 1, name: '아메리카노', category: '음료', price: 3000, stock: 50 },
-    { id: 2, name: '카페라떼', category: '음료', price: 3500, stock: 30 },
-    { id: 3, name: '초코칩 쿠키', category: '디저트', price: 2500, stock: 20 }
-  ];
+let products = JSON.parse(localStorage.getItem("products")) || [];
 
-  function renderTable(filter = '') {
-    tblBody.innerHTML = '';
-    products
-      .filter(p => p.name.includes(filter))
-      .forEach(p => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><input type="checkbox" class="row-check" data-id="${p.id}"></td>
-          <td>${p.id}</td>
-          <td>${p.name}</td>
-          <td>${p.category}</td>
-          <td>${p.price.toLocaleString()}원</td>
-          <td>${p.stock}개</td>
-          <td>
-            <button class="btn btn-sm btn-info edit-btn" data-id="${p.id}"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-sm btn-danger del-btn" data-id="${p.id}"><i class="fas fa-trash"></i></button>
-          </td>`;
-        tblBody.appendChild(tr);
-      });
-  }
+function renderProducts(list = products) {
+    const tbody = document.getElementById("productList");
+    tbody.innerHTML = "";
 
-  // 이벤트 바인딩
-  document.getElementById('addProductBtn').addEventListener('click', () => {
-    form.reset(); 
-    form.productId.value = '';
-    productModalEl.querySelector('.modal-title').textContent = '상품 추가';
-    productModal.show();
-  });
+    list.forEach((p, i) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+      <td><img src="${p.image || 'https://via.placeholder.com/50'}" /></td>
+      <td>${p.name}</td>
+      <td>${p.category}</td>
+      <td>₩${p.price.toLocaleString()}</td>
+      <td>${p.stock}개</td>
+      <td class="product-actions">
+        <button class="btn btn-sm btn-outline" onclick="editProduct(${i})">수정</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteProduct(${i})">삭제</button>
+      </td>
+    `;
+        tbody.appendChild(row);
+    });
+}
 
-  tblBody.addEventListener('click', e => {
-    const id = +e.target.closest('[data-id]')?.dataset.id;
-    if (e.target.closest('.edit-btn')) {
-      const prod = products.find(p => p.id === id);
-      form.productId.value       = prod.id;
-      form.productName.value     = prod.name;
-      form.productCategory.value = prod.category;
-      form.productPrice.value    = prod.price;
-      form.productStock.value    = prod.stock;
-      productModalEl.querySelector('.modal-title').textContent = '상품 수정';
-      productModal.show();
-    }
-    if (e.target.closest('.del-btn')) {
-      products = products.filter(p => p.id !== id);
-      renderTable(searchInput.value);
-    }
-  });
+function saveProduct() {
+    const name = document.getElementById("productName").value;
+    const category = document.getElementById("productCategory").value;
+    const price = parseInt(document.getElementById("productPrice").value);
+    const stock = parseInt(document.getElementById("productStock").value);
+    const image = document.getElementById("productImage").value;
 
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const id = form.productId.value;
-    const newProd = {
-      id: id ? +id : (products.length ? products.at(-1).id + 1 : 1),
-      name: form.productName.value,
-      category: form.productCategory.value,
-      price: +form.productPrice.value,
-      stock: +form.productStock.value
-    };
-    if (id) {
-      products = products.map(p => p.id === newProd.id ? newProd : p);
-    } else {
-      products.push(newProd);
-    }
-    productModal.hide();
-    renderTable(searchInput.value);
-  });
+    if (!name || !category || isNaN(price) || isNaN(stock)) return alert("모든 항목을 입력해주세요.");
 
-  // 검색
-  searchInput.addEventListener('input', () => renderTable(searchInput.value));
+    products.push({ name, category, price, stock, image });
+    localStorage.setItem("products", JSON.stringify(products));
+    renderProducts();
+    document.querySelector('[data-modal-close="productModal"]').click();
+}
 
-  // 전체 선택/해제
-  selectAll.addEventListener('change', () => {
-    document.querySelectorAll('.row-check').forEach(chk => chk.checked = selectAll.checked);
-  });
+function editProduct(index) {
+    const product = products[index];
+    document.getElementById("productName").value = product.name;
+    document.getElementById("productCategory").value = product.category;
+    document.getElementById("productPrice").value = product.price;
+    document.getElementById("productStock").value = product.stock;
+    document.getElementById("productImage").value = product.image;
 
-  // 선택 삭제
-  document.getElementById('deleteSelectedBtn').addEventListener('click', () => {
-    const toDel = [...document.querySelectorAll('.row-check:checked')].map(chk => +chk.dataset.id);
-    products = products.filter(p => !toDel.includes(p.id));
-    renderTable(searchInput.value);
-  });
+    openModal("productModal");
 
-  renderTable();
+    const saveBtn = document.getElementById("saveProductBtn");
+    const newSave = saveBtn.cloneNode(true);
+    saveBtn.parentNode.replaceChild(newSave, saveBtn);
+
+    newSave.addEventListener("click", () => {
+        products[index] = {
+            name: document.getElementById("productName").value,
+            category: document.getElementById("productCategory").value,
+            price: parseInt(document.getElementById("productPrice").value),
+            stock: parseInt(document.getElementById("productStock").value),
+            image: document.getElementById("productImage").value,
+        };
+        localStorage.setItem("products", JSON.stringify(products));
+        renderProducts();
+        closeModal("productModal");
+    });
+}
+
+function deleteProduct(index) {
+    if (!confirm("정말 삭제하시겠습니까?")) return;
+    products.splice(index, 1);
+    localStorage.setItem("products", JSON.stringify(products));
+    renderProducts();
+}
+
+document.getElementById("saveProductBtn").addEventListener("click", saveProduct);
+
+document.getElementById("searchInput").addEventListener("input", e => {
+    const keyword = e.target.value.toLowerCase();
+    const filtered = products.filter(p => p.name.toLowerCase().includes(keyword));
+    renderProducts(filtered);
 });
+
+renderProducts();
