@@ -1,61 +1,180 @@
-<!-- orders.html -->
 <!DOCTYPE html>
 <html lang="ko">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>주문 관리 - 무인상점</title>
-  <link rel="stylesheet" href="libs/fontawesome.min.css" />
-  <link rel="stylesheet" href="css/common.css" />
-  <link rel="stylesheet" href="css/Orders.css" />
+  <title>상품 관리</title>
+
+  <!-- 구글 폰트 -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet" />
+  <!-- Bootstrap -->
+  <link href="bootstrap-4.6.2-dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- 공통 스타일 -->
+  <link href="CSS/common.css" rel="stylesheet" />
+  <!-- 대시보드 스타일 -->
+  <link href="CSS/Dashboard.css" rel="stylesheet" />
+  <!-- 상품관리 스타일 -->
+  <link href="CSS/products.css" rel="stylesheet" />
 </head>
 
 <body>
-  <aside class="sidebar">
-    <h2>무인상점</h2>
-    <a href="index.html" class="nav-link"><i class="fas fa-home"></i> 대시보드</a>
-    <a href="products.html" class="nav-link"><i class="fas fa-boxes"></i> 상품 관리</a>
-    <a href="orders.html" class="nav-link active"><i class="fas fa-shopping-cart"></i> 주문 관리</a>
-    <a href="inventory.html" class="nav-link"><i class="fas fa-warehouse"></i> 재고 관리</a>
-    <a href="sales.html" class="nav-link"><i class="fas fa-chart-line"></i> 매출 분석</a>
+  <!-- 사이드바 -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-brand">
+      <i class="fas fa-store"></i>
+      <h2>무인 매장</h2>
+    </div>
+    <nav>
+      <a href="index.html" class="nav-link"><i class="fas fa-home"></i>대시보드</a>
+      <a href="products.html" class="nav-link active"><i class="fas fa-boxes"></i>상품 관리</a>
+      <a href="orders.html" class="nav-link"><i class="fas fa-shopping-cart"></i>주문 관리</a>
+      <a href="inventory.html" class="nav-link"><i class="fas fa-warehouse"></i>재고 관리</a>
+      <a href="sales.html" class="nav-link"><i class="fas fa-chart-line"></i>매출 분석</a>
+      <a href="customers.html" class="nav-link"><i class="fas fa-users"></i>고객 관리</a>
+      <a href="settings.html" class="nav-link"><i class="fas fa-cog"></i>설정</a>
+    </nav>
   </aside>
 
-  <header class="header">
-    <h1>주문 관리</h1>
-  </header>
+  <!-- 메인 컨테이너 -->
+  <div class="main-container">
+    <!-- 헤더 -->
+    <header class="header d-flex justify-content-between align-items-center">
+      <!-- 모바일 메뉴 토글 -->
+      <button id="mobileMenuBtn" class="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+      </button>
+      <h1 class="header-title">상품 관리</h1>
+      <div class="user-info">
+        <button class="notification-btn">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </button>
+        <span>관리자님</span>
+      </div>
+    </header>
 
-  <main class="main">
-    <div class="container">
-      <table class="order-table">
-        <thead>
-          <tr>
-            <th>주문번호</th>
-            <th>고객명</th>
-            <th>금액</th>
-            <th>상태</th>
-            <th>변경</th>
-            <th>상세</th>
-          </tr>
-        </thead>
-        <tbody id="orderList"></tbody>
-      </table>
+    <!-- 본문 -->
+    <main class="main-content container py-4">
+      <!-- 컨트롤 섹션 -->
+      <div class="controls mb-4">
+        <!-- 검색창 -->
+        <div class="search-box">
+          <i class="fas fa-search search-icon"></i>
+          <input id="searchInput" type="text" class="form-control" placeholder="상품코드 또는 상품명 검색..." />
+        </div>
+
+        <!-- 카테고리 필터 -->
+        <select id="categoryFilter" class="form-select filter-select">
+          <option value="전체">전체</option>
+          <option value="전자제품">전자제품</option>
+          <option value="의류/신발">의류/신발</option>
+          <option value="생활용품">생활용품</option>
+          <option value="도서/문구">도서/문구</option>
+          <option value="식품/음료">식품/음료</option>
+        </select>
+
+        <!-- 신규 등록 버튼 -->
+        <button id="addProductBtn" class="btn btn-primary add-btn">
+          <i class="fas fa-plus me-1"></i>신규 상품 등록
+        </button>
+      </div>
+
+      <!-- 상품 테이블 -->
+      <div class="table-responsive">
+        <table class="table table-hover align-middle bg-white rounded shadow-sm">
+          <thead class="table-light">
+            <tr>
+              <th>이미지</th>
+              <th>상품코드</th>
+              <th>상품명</th>
+              <th>카테고리</th>
+              <th>가격</th>
+              <th>재고</th>
+              <th>관리</th>
+            </tr>
+          </thead>
+          <tbody id="productsTableBody"><!-- 동적 생성 --></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- 상품 추가/수정 모달 -->
+  <div id="productModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">신규 상품 등록</h3>
+        <button id="closeModalBtn" class="close-btn"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="productForm" class="modal-form">
+        <div class="form-group">
+          <label for="productId">상품코드</label>
+          <input type="text" id="productId" readonly>
+        </div>
+        <div class="form-group">
+          <label for="productName">상품명</label>
+          <input type="text" id="productName" required>
+        </div>
+        <div class="form-group">
+          <label for="productCategory">카테고리</label>
+          <select id="productCategory">
+            <option>전자제품</option>
+            <option>의류/신발</option>
+            <option>생활용품</option>
+            <option>도서/문구</option>
+            <option>식품/음료</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="productPrice">가격</label>
+          <input type="number" id="productPrice" required>
+        </div>
+        <div class="form-group">
+          <label for="productStock">재고</label>
+          <input type="number" id="productStock" required>
+        </div>
+        <div class="form-group">
+          <label for="productImage">이미지 URL</label>
+          <input type="url" id="productImage" placeholder="https://example.com/image.jpg">
+          <div id="imagePreview" class="image-preview"></div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="cancelBtn" class="cancel-btn">취소</button>
+          <button type="submit" id="submitBtn" class="submit-btn">등록</button>
+        </div>
+      </form>
     </div>
-  </main>
+  </div>
 
-  <!-- 상세 보기 모달 -->
-  <div class="modal-backdrop" id="orderDetailModal">
-    <div class="modal">
-      <h3>주문 상세</h3>
-      <div id="orderDetailBox"></div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" data-modal-close="orderDetailModal">닫기</button>
+  <!-- 삭제 확인 모달 -->
+  <div id="deleteModal" class="modal">
+    <div class="modal-content small">
+      <div class="delete-modal-content text-center">
+        <div class="delete-icon mb-3">
+          <i class="fas fa-trash-alt fa-2x text-danger"></i>
+        </div>
+        <h3>상품 삭제</h3>
+        <p id="deleteMessage">
+          <strong id="deleteProductName"></strong> 상품을 삭제하시겠습니까?<br>
+          삭제된 상품은 복구할 수 없습니다.
+        </p>
+        <div class="delete-actions mt-4">
+          <button id="cancelDeleteBtn" class="btn btn-outline-secondary me-2">취소</button>
+          <button id="confirmDeleteBtn" class="btn btn-danger">삭제</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <script type="module" src="js/common.js"></script>
-  <script type="module" src="js/Orders.js"></script>
+  <!-- 스크립트 -->
+  <script src="bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script>
+  <script src="JS/common.js"></script>
+  <script src="JS/products.js"></script>
 </body>
 
 </html>

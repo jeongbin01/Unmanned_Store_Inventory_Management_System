@@ -4,57 +4,170 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>주문 관리 - 무인상점</title>
-  <link rel="stylesheet" href="libs/fontawesome.min.css" />
-  <link rel="stylesheet" href="css/common.css" />
-  <link rel="stylesheet" href="css/Orders.css" />
+  <title>주문 관리</title>
+
+  <!-- 구글 폰트 -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet" />
+  <!-- Bootstrap -->
+  <link href="bootstrap-4.6.2-dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- 공통 스타일 -->
+  <link href="CSS/common.css" rel="stylesheet" />
+  <!-- 대시보드 스타일 -->
+  <link href="CSS/Dashboard.css" rel="stylesheet" />
+  <!-- 주문관리 전용 스타일 -->
+  <link href="CSS/Orders.css" rel="stylesheet" />
 </head>
 
 <body>
-  <aside class="sidebar">
-    <h2>무인상점</h2>
-    <a href="index.html" class="nav-link"><i class="fas fa-home"></i> 대시보드</a>
-    <a href="products.html" class="nav-link"><i class="fas fa-boxes"></i> 상품 관리</a>
-    <a href="orders.html" class="nav-link active"><i class="fas fa-shopping-cart"></i> 주문 관리</a>
-    <a href="inventory.html" class="nav-link"><i class="fas fa-warehouse"></i> 재고 관리</a>
-    <a href="sales.html" class="nav-link"><i class="fas fa-chart-line"></i> 매출 분석</a>
+  <!-- 사이드바 -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-brand">
+      <i class="fas fa-store"></i>
+      <h2>무인 매장</h2>
+    </div>
+    <nav>
+      <a href="index.html" class="nav-link"><i class="fas fa-home"></i>대시보드</a>
+      <a href="products.html" class="nav-link"><i class="fas fa-boxes"></i>상품 관리</a>
+      <a href="orders.html" class="nav-link active"><i class="fas fa-shopping-cart"></i>주문 관리</a>
+      <a href="inventory.html" class="nav-link"><i class="fas fa-warehouse"></i>재고 관리</a>
+      <a href="sales.html" class="nav-link"><i class="fas fa-chart-line"></i>매출 분석</a>
+      <a href="customers.html" class="nav-link"><i class="fas fa-users"></i>고객 관리</a>
+      <a href="settings.html" class="nav-link"><i class="fas fa-cog"></i>설정</a>
+    </nav>
   </aside>
 
-  <header class="header">
-    <h1>주문 관리</h1>
-  </header>
+  <!-- 메인 컨테이너 -->
+  <div class="main-container">
+    <!-- 헤더 -->
+    <header class="header d-flex justify-content-between align-items-center">
+      <button id="mobileMenuBtn" class="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+      </button>
+      <h1 class="header-title">주문 관리</h1>
+      <div class="user-info">
+        <button class="notification-btn">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </button>
+        <span>관리자님</span>
+      </div>
+    </header>
 
-  <main class="main">
-    <div class="container">
-      <table class="order-table">
-        <thead>
-          <tr>
-            <th>주문번호</th>
-            <th>고객명</th>
-            <th>금액</th>
-            <th>상태</th>
-            <th>변경</th>
-            <th>상세</th>
-          </tr>
-        </thead>
-        <tbody id="orderList"></tbody>
-      </table>
-    </div>
-  </main>
+    <!-- 본문 -->
+    <main class="main-content container py-4">
+      <!-- 컨트롤 섹션 -->
+      <div class="controls mb-4">
+        <!-- 검색창 -->
+        <div class="search-box">
+          <i class="fas fa-search search-icon"></i>
+          <input id="searchInput" type="text" class="form-control" placeholder="주문번호 또는 고객명 검색..." />
+        </div>
 
-  <!-- 상세 보기 모달 -->
-  <div class="modal-backdrop" id="orderDetailModal">
-    <div class="modal">
-      <h3>주문 상세</h3>
-      <div id="orderDetailBox"></div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" data-modal-close="orderDetailModal">닫기</button>
+        <!-- 상태 필터 -->
+        <select id="statusFilter" class="form-select filter-select">
+          <option value="전체">모든 상태</option>
+          <option value="접수">접수</option>
+          <option value="처리중">처리중</option>
+          <option value="완료">완료</option>
+          <option value="취소">취소</option>
+        </select>
+      </div>
+
+      <!-- 주문 테이블 -->
+      <div class="table-responsive">
+        <table class="table table-hover align-middle bg-white rounded shadow-sm">
+          <thead class="table-light">
+            <tr>
+              <th>주문번호</th>
+              <th>주문일시</th>
+              <th>고객명</th>
+              <th>상품수</th>
+              <th>총액</th>
+              <th>상태</th>
+              <th>상세</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody">
+            <!-- JS로 동적 생성 -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- 주문 상세 모달 -->
+  <div id="orderModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalOrderId">주문 상세 정보</h3>
+        <button id="closeOrderModal" class="close-btn">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- 주문 헤더 -->
+        <div class="mb-3">
+          <span id="modalOrderDate" class="text-muted"></span>
+          <span id="modalOrderStatus" class="badge"></span>
+        </div>
+        <!-- 고객 정보 -->
+        <section class="mb-4">
+          <h5>고객 정보</h5>
+          <p id="modalCustomerName"></p>
+        </section>
+        <!-- 주문 상품 -->
+        <section class="mb-4">
+          <h5>주문 상품</h5>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>상품코드</th>
+                <th>상품명</th>
+                <th>수량</th>
+                <th>소계</th>
+              </tr>
+            </thead>
+            <tbody id="modalItemsBody"></tbody>
+            <tfoot>
+              <tr>
+                <th colspan="3" class="text-end">총계</th>
+                <th id="modalTotalPrice"></th>
+              </tr>
+            </tfoot>
+          </table>
+        </section>
+        <!-- 결제 정보 -->
+        <section class="mb-4">
+          <h5>결제 정보</h5>
+          <p id="modalPaymentInfo"></p>
+        </section>
+        <!-- 상태 변경 -->
+        <section>
+          <div class="d-flex gap-2">
+            <select id="modalStatusSelect" class="form-select w-auto">
+              <option>접수</option>
+              <option>처리중</option>
+              <option>완료</option>
+              <option>취소</option>
+            </select>
+            <button id="modalUpdateBtn" class="btn btn-primary">상태 변경</button>
+          </div>
+        </section>
+      </div>
+      <div class="modal-footer text-end">
+        <button id="modalCloseBtn" class="btn btn-outline-secondary">닫기</button>
       </div>
     </div>
   </div>
 
-  <script type="module" src="js/common.js"></script>
-  <script type="module" src="js/Orders.js"></script>
+  <!-- 스크립트 -->
+  <script src="bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script>
+  <script src="JS/common.js"></script>
+  <script src="JS/Orders.js"></script>
 </body>
 
 </html>

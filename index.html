@@ -1,70 +1,216 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>무인상점 관리자 대시보드</title>
 
-  <!-- 폰트 & 아이콘 -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="libs/fontawesome.min.css" />
-  
-  <!-- 공통 및 대시보드 스타일 -->
-  <link rel="stylesheet" href="css/common.css" />
-  <link rel="stylesheet" href="css/Dashboard.css" />
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>무인 매장 관리 시스템</title>
+
+  <!--google 글꼴-->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <!-- Font Awesome CDN css -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+  <!-- bootstrap css -->
+  <link href="bootstrap-4.6.2-dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- 외부 CSS -->
+  <link href="CSS/common.css" rel="stylesheet">
+  <link href="CSS/Dashboard.css" rel="stylesheet">
 
   <!-- Chart.js -->
-  <script src="libs/chart.min.js"></script>
+  <script src="Chart/chart.umd.js"></script>
 </head>
+
 <body>
-  <aside class="sidebar">
-    <h2>무인상점</h2>
-    <a href="index.html" class="nav-link active"><i class="fas fa-home"></i> 대시보드</a>
-    <a href="products.html" class="nav-link"><i class="fas fa-boxes"></i> 상품 관리</a>
-    <a href="orders.html" class="nav-link"><i class="fas fa-shopping-cart"></i> 주문 관리</a>
-    <a href="inventory.html" class="nav-link"><i class="fas fa-warehouse"></i> 재고 관리</a>
-    <a href="sales.html" class="nav-link"><i class="fas fa-chart-line"></i> 매출 분석</a>
+  <!-- 사이드바 -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-brand">
+      <i class="fas fa-store"></i>
+      <h2>무인 매장</h2>
+    </div>
+    <nav>
+      <a href="index.html" class="nav-link active"><i class="fas fa-home"></i>대시보드</a>
+      <a href="products.html" class="nav-link"><i class="fas fa-boxes"></i>상품 관리</a>
+      <a href="orders.html" class="nav-link"><i class="fas fa-shopping-cart"></i>주문 관리</a>
+      <a href="#" class="nav-link"><i class="fas fa-warehouse"></i>재고 관리</a>
+      <a href="#" class="nav-link"><i class="fas fa-chart-line"></i>매출 분석</a>
+      <a href="#" class="nav-link"><i class="fas fa-users"></i>고객 관리</a>
+      <a href="#" class="nav-link"><i class="fas fa-cog"></i>설정</a>
+    </nav>
   </aside>
 
-  <header class="header">
-    <h1>대시보드</h1>
-    <div class="user-info">
-      <i class="fas fa-bell"></i>
-      <span>관리자</span>
-    </div>
-  </header>
+  <!-- 메인 컨테이너 -->
+  <div class="main-container">
+    <!-- 헤더 -->
+    <header class="header d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <button id="mobileMenuBtn" class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        <h1 class="ms-2 header-title">대시보드</h1>
+      </div>
+      <div class="user-info">
+        <button class="notification-btn">
+          <i class="fas fa-bell"></i><span class="notification-badge">3</span>
+        </button>
+        <span>관리자님</span>
+      </div>
+    </header>
 
-  <main class="main">
-    <div class="container">
-      <section class="kpi-cards">
-        <div class="kpi-card">
-          <h3>일일 매출</h3>
-          <p>₩1,487,500</p>
-        </div>
-        <div class="kpi-card">
-          <h3>총 주문 수</h3>
-          <p>184건</p>
-        </div>
-        <div class="kpi-card warning">
-          <h3>재고 경고</h3>
-          <p>12건</p>
+    <!-- 주요 콘텐츠 영역 -->
+    <main class="main-content">
+      <!-- KPI 카드 -->
+      <section class="kpi-section">
+        <div class="row g-4">
+          <div class="col-lg-4 col-md-6">
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <div>
+                  <p class="kpi-title">오늘 매출</p>
+                  <h3 class="kpi-value">2,487,500원</h3>
+                </div>
+                <div class="kpi-icon sales">
+                  <i class="fas fa-won-sign"></i>
+                </div>
+              </div>
+              <div class="kpi-change positive">
+                <i class="fas fa-arrow-up"></i>
+                <span>12.5% 증가</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <div>
+                  <p class="kpi-title">총 주문 수</p>
+                  <h3 class="kpi-value">247건</h3>
+                </div>
+                <div class="kpi-icon orders">
+                  <i class="fas fa-shopping-bag"></i>
+                </div>
+              </div>
+              <div class="kpi-change positive">
+                <i class="fas fa-arrow-up"></i>
+                <span>8.3% 증가</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <div>
+                  <p class="kpi-title">재고 경고</p>
+                  <h3 class="kpi-value">12건건</h3>
+                </div>
+                <div class="kpi-icon warning">
+                  <i class="fas fa-exclamation-triangle"></i>
+                </div>
+              </div>
+              <div class="kpi-change negative">
+                <i class="fas fa-arrow-down"></i>
+                <span>2건 감소</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section class="charts">
-        <div class="chart-box">
-          <h3>주간 매출 추이</h3>
-          <canvas id="salesLineChart"></canvas>
+      <!-- 차트 -->
+      <section class="charts-section">
+        <div class="row g-4">
+          <div class="col-lg-8">
+            <div class="chart-card">
+              <div class="chart-header">
+                <h3 class="chart-title">주간 매출 현황</h3>
+              </div>
+              <div class="chart-container">
+                <canvas id="salesChart"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="chart-card">
+              <div class="chart-header">
+                <h3 class="chart-title">상품별 주문량</h3>
+              </div>
+              <div class="chart-container">
+                <canvas id="productChart"></canvas>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="chart-box">
-          <h3>상품별 판매 비율</h3>
-          <canvas id="productDoughnutChart"></canvas>
+        <div class="row g-4 mt-0">
+          <div class="col-12">
+            <div class="chart-card">
+              <div class="chart-header">
+                <h3 class="chart-title">일별 방문자 수</h3>
+              </div>
+              <div class="chart-container">
+                <canvas id="visitorChart"></canvas>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
-    </div>
-  </main>
 
-  <script type="module" src="js/common.js"></script>
-  <script type="module" src="js/Dashboard.js"></script>
+      <!-- 테이블 -->
+      <section class="tables-section">
+        <div class="row g-4">
+          <div class="col-lg-8">
+            <div class="table-card">
+              <div class="table-header">
+                <h3 class="table-title">최근 주문</h3>
+                <a href="orders.html" class="view-all-btn">모두 보기</a>
+              </div>
+              <div class="table-responsive">
+                <table class="custom-table">
+                  <thead>
+                    <tr>
+                      <th>주문번호</th>
+                      <th>고객명</th>
+                      <th>금액</th>
+                      <th>상태</th>
+                      <th>시간</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ordersTable">
+                    <!-- 주문 데이터 삽입 -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="table-card">
+              <div class="table-header">
+                <h3 class="table-title">재고 부족 상품</h3>
+                <button class="view-all-btn">모두 보기</button>
+              </div>
+              <div class="table-responsive">
+                <table class="custom-table">
+                  <thead>
+                    <tr>
+                      <th>상품명</th>
+                      <th>남은 수량</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stockTable">
+                    <!-- 재고 데이터 삽입 -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- JS 프레임워크 -->
+  <script src="bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script>
+  <!-- 외부 JS -->
+  <script src="JS/common.js"></script>
+  <script src="JS/Dashboard.js"></script>
 </body>
+
 </html>

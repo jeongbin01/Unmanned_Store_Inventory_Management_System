@@ -1,32 +1,19 @@
-export function toggleSidebar() {
-  const sidebar = document.querySelector('.sidebar');
-  const main = document.querySelector('.main');
-  sidebar.classList.toggle('collapsed');
-  main.classList.toggle('expanded');
-}
-
-export function openModal(id) {
-  const modal = document.getElementById(id);
-  modal?.classList.add('open');
-}
-
-export function closeModal(id) {
-  const modal = document.getElementById(id);
-  modal?.classList.remove('open');
-}
+// common.js
+// ————————————————
+// 사이드바 토글 & 내비게이션 active 처리
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('[data-modal-open]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const target = btn.getAttribute('data-modal-open');
-      openModal(target);
-    });
+  // 사이드바 토글 클릭 시 내비게이션 토글 총변경
+  btn?.addEventListener('click', () => {
+    sidebar.classList.toggle('show');
   });
 
-  document.querySelectorAll('[data-modal-close]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const target = btn.getAttribute('data-modal-close');
-      closeModal(target);
+  // 내비게이션 링크 클릭 시 active 클래스 토글
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
     });
   });
 });

@@ -1,74 +1,102 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>재고 관리 - 무인상점</title>
-  <link rel="stylesheet" href="libs/fontawesome.min.css" />
-  <link rel="stylesheet" href="css/common.css" />
-  <link rel="stylesheet" href="css/Inventory.css" />
+  <title>재고 관리</title>
+  <!-- Bootstrap, Font Awesome 등 동일 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
-
 <body>
-  <aside class="sidebar">
-    <h2>무인상점</h2>
-    <a href="index.html" class="nav-link"><i class="fas fa-home"></i> 대시보드</a>
-    <a href="products.html" class="nav-link"><i class="fas fa-boxes"></i> 상품 관리</a>
-    <a href="orders.html" class="nav-link"><i class="fas fa-shopping-cart"></i> 주문 관리</a>
-    <a href="inventory.html" class="nav-link active"><i class="fas fa-warehouse"></i> 재고 관리</a>
-    <a href="sales.html" class="nav-link"><i class="fas fa-chart-line"></i> 매출 분석</a>
-  </aside>
+  <!-- 사이드바 -->
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-header p-4"><h2>Admin</h2></div>
+    <ul class="nav flex-column">
+      <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-chart-line me-2"></i>대시보드</a></li>
+      <li class="nav-item"><a href="products.html" class="nav-link"><i class="fas fa-box-open me-2"></i>상품 관리</a></li>
+      <li class="nav-item"><a href="orders.html" class="nav-link"><i class="fas fa-shopping-cart me-2"></i>주문 관리</a></li>
+      <li class="nav-item"><a href="inventory.html" class="nav-link active"><i class="fas fa-warehouse me-2"></i>재고 관리</a></li>
+    </ul>
+  </div>
 
-  <header class="header">
-    <h1>재고 관리</h1>
-    <button class="btn btn-primary" data-modal-open="stockModal">입/출고 등록</button>
-  </header>
-
-  <main class="main">
-    <div class="container">
-      <table class="inventory-table">
+  <!-- 메인 컨텐츠 -->
+  <div id="main-content" class="main-content">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+      <div class="container-fluid">
+        <button class="btn btn-outline-secondary d-lg-none" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+        <span class="navbar-brand mb-0 h1">재고 관리</span>
+        <div class="dropdown ms-auto">
+          <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userMenu" data-bs-toggle="dropdown">
+            <i class="fas fa-user-circle fa-2x"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+            <li><a class="dropdown-item" href="#">로그아웃</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container-fluid p-4">
+      <!-- KPI -->
+      <div class="row g-4 mb-4">
+        <div class="col-md-3">
+          <div class="card p-3 shadow-sm">
+            <p class="mb-1">전체 상품</p><h5 id="invTotalItems">0개</h5>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card p-3 shadow-sm">
+            <p class="mb-1">재고 상품</p><h5 id="invLowStock">0개</h5>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card p-3 shadow-sm">
+            <h6>카테고리별 재고 분포</h6>
+            <canvas id="inventoryChart"></canvas>
+          </div>
+        </div>
+      </div>
+      <!-- 재고 테이블 -->
+      <table class="table table-hover">
         <thead>
           <tr>
-            <th>상품명</th>
-            <th>카테고리</th>
-            <th>재고 수량</th>
-            <th>상태</th>
+            <th>ID</th><th>이름</th><th>카테고리</th><th>재고</th><th>행동</th>
           </tr>
         </thead>
-        <tbody id="inventoryList"></tbody>
+        <tbody id="inventoryTableBody"></tbody>
       </table>
-    </div>
-  </main>
-
-  <!-- 입/출고 모달 -->
-  <div class="modal-backdrop" id="stockModal">
-    <div class="modal">
-      <h3>입/출고 등록</h3>
-      <div class="input-group">
-        <label>상품명</label>
-        <select id="stockProductSelect"></select>
-      </div>
-      <div class="input-group">
-        <label>수량</label>
-        <input type="number" id="stockQuantity" min="1" />
-      </div>
-      <div class="input-group">
-        <label>타입</label>
-        <select id="stockType">
-          <option value="in">입고</option>
-          <option value="out">출고</option>
-        </select>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" data-modal-close="stockModal">취소</button>
-        <button class="btn btn-primary" id="saveStockBtn">등록</button>
-      </div>
     </div>
   </div>
 
-  <script type="module" src="js/common.js"></script>
-  <script type="module" src="js/Inventory.js"></script>
-</body>
+  <!-- 재고 조정 모달 -->
+  <div class="modal fade" id="adjustModal" tabindex="-1" aria-labelledby="adjustModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form id="adjustForm" class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="adjustModalLabel">재고 조정</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="adjustId" />
+          <p id="adjustName"></p>
+          <div class="mb-3">
+            <label class="form-label">조정 수량(+/-)</label>
+            <input type="number" id="adjustQty" class="form-control" required />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+          <button type="submit" class="btn btn-primary">적용</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
+  <!-- 스크립트 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/inventory.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
