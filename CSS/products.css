@@ -1,17 +1,16 @@
-.main-content {
-  /* 기존 margin-left:260px; 등은 그대로 두시고 */
+/* ───────── products.css ───────── */
+
+/* 본문 여백 */
+.main-content.container {
   padding-top: 1rem;
-  /* 위 여백 */
   padding-bottom: 1rem;
-  /* 아래 여백 */
-  /* background: #f8f9fa;  필요하다면 */
 }
 
 /* — 컨트롤바 전용 스타일 — */
 .controls {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
   flex-wrap: wrap;
 }
 
@@ -30,22 +29,50 @@
 }
 
 .search-box input {
+  height: 40px;
   padding-left: 2.5rem;
-  /* 아이콘만큼 여백 추가 */
 }
 
 .filter-select {
   min-width: 140px;
+  height: 40px;
 }
 
 .add-btn {
+  height: 40px;
+  padding: 0 1.25rem;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
+/* — 테이블 스타일 — */
+.table-responsive {
+  margin-top: 1rem;
+}
 
+.table {
+  width: 100%;
+  table-layout: auto;
+}
 
-/* 모달 */
+.table th,
+.table td {
+  padding: 1rem 0.75rem;
+}
+
+.table-hover tbody tr {
+  height: 64px;
+}
+
+/* 상품 목록 이미지 고정 */
+.table img.product-image {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* — 모달 스타일 — */
 .modal {
   display: none;
   position: fixed;
@@ -64,8 +91,8 @@
   background: #fff;
   border-radius: 8px;
   width: 100%;
-  max-width: 480px;
-  padding: 1.5rem;
+  max-width: 560px;
+  padding: 2rem;
 }
 
 .modal-content.small {
@@ -76,26 +103,44 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .close-btn {
   background: none;
   border: none;
   font-size: 1.25rem;
+  cursor: pointer;
 }
 
 .modal-form .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: .5rem;
+.modal-form label {
+  display: block;
+  margin-bottom: 0.25rem;
 }
 
-/* 이미지 프리뷰 */
+.modal-form input[type="text"],
+.modal-form input[type="number"],
+.modal-form input[type="url"],
+.modal-form select {
+  width: 100%;
+  height: 38px;
+  padding: 0 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.modal-form input:focus,
+.modal-form select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
 .image-preview img {
   max-width: 80px;
   max-height: 80px;
@@ -103,39 +148,40 @@
   border-radius: 4px;
 }
 
-/* 삭제 모달 */
-.delete-modal-content {
-  text-align: center;
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
-.delete-icon {
-  margin-bottom: 1rem;
+.cancel-btn {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  border-radius: 4px;
+  min-width: 80px;
+  height: 36px;
 }
 
-/* 상태 배지 (JS 로컬 클래스) */
-.stock-badge {
-  display: inline-block;
-  padding: .25rem .5rem;
-  border-radius: 12px;
-  font-size: .75rem;
+.cancel-btn:hover {
+  background: #e5e7eb;
 }
 
-.out-of-stock {
-  background: #f8d7da;
-  color: #842029;
+.submit-btn {
+  background: #3b82f6;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  min-width: 80px;
+  height: 36px;
 }
 
-.low-stock {
-  background: #fff3cd;
-  color: #664d03;
+.submit-btn:hover {
+  background: #2563eb;
 }
 
-.in-stock {
-  background: #d1e7dd;
-  color: #0f5132;
-}
-
-/* ───────── products.css 맨 아래에 추가 ───────── */
+/* — 액션 버튼 (편집/삭제) — */
 .action-btn {
   background: none;
   border: none;
@@ -150,22 +196,41 @@
 
 .edit-btn {
   color: #6b7280;
-  /* gray-500 */
 }
 
 .edit-btn:hover {
   background-color: rgba(107, 114, 128, 0.1);
   color: #374151;
-  /* gray-700 */
 }
 
 .delete-btn {
   color: #ef4444;
-  /* red-500 */
 }
 
 .delete-btn:hover {
   background-color: rgba(239, 68, 68, 0.1);
   color: #b91c1c;
-  /* red-700 */
+}
+
+/* — 재고 배지 스타일 — */
+.stock-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+}
+
+.out-of-stock {
+  background-color: #f8d7da;
+  color: #842029;
+}
+
+.low-stock {
+  background-color: #fff3cd;
+  color: #664d03;
+}
+
+.in-stock {
+  background-color: #d1e7dd;
+  color: #0f5132;
 }

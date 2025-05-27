@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>상품 관리</title>
+  <title>상품 관리 - 무인 매장 관리</title>
 
   <!-- 구글 폰트 -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap"
@@ -36,7 +36,6 @@
       <a href="inventory.html" class="nav-link"><i class="fas fa-warehouse"></i>재고 관리</a>
       <a href="sales.html" class="nav-link"><i class="fas fa-chart-line"></i>매출 분석</a>
       <a href="customers.html" class="nav-link"><i class="fas fa-users"></i>고객 관리</a>
-      <a href="settings.html" class="nav-link"><i class="fas fa-cog"></i>설정</a>
     </nav>
   </aside>
 
@@ -109,16 +108,18 @@
     <div class="modal-content">
       <div class="modal-header">
         <h3 id="modalTitle">신규 상품 등록</h3>
-        <button id="closeModalBtn" class="close-btn"><i class="fas fa-times"></i></button>
+        <button id="closeModalBtn" class="close-btn">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
       <form id="productForm" class="modal-form">
         <div class="form-group">
           <label for="productId">상품코드</label>
-          <input type="text" id="productId" readonly>
+          <input type="text" id="productId" readonly />
         </div>
         <div class="form-group">
-          <label for="productName">상품명</label>
-          <input type="text" id="productName" required>
+          <label for="productName">상품명 *</label>
+          <input type="text" id="productName" required />
         </div>
         <div class="form-group">
           <label for="productCategory">카테고리</label>
@@ -131,21 +132,25 @@
           </select>
         </div>
         <div class="form-group">
-          <label for="productPrice">가격</label>
-          <input type="number" id="productPrice" required>
+          <label for="productPrice">가격 *</label>
+          <input type="number" id="productPrice" required />
         </div>
         <div class="form-group">
-          <label for="productStock">재고</label>
-          <input type="number" id="productStock" required>
+          <label for="productStock">재고 *</label>
+          <input type="number" id="productStock" required />
         </div>
         <div class="form-group">
           <label for="productImage">이미지 URL</label>
-          <input type="url" id="productImage" placeholder="https://example.com/image.jpg">
+          <input type="url" id="productImage" placeholder="https://example.com/image.jpg" />
           <div id="imagePreview" class="image-preview"></div>
         </div>
         <div class="modal-actions">
-          <button type="button" id="cancelBtn" class="cancel-btn">취소</button>
-          <button type="submit" id="submitBtn" class="submit-btn">등록</button>
+          <button type="button" id="cancelBtn" class="cancel-btn">
+            취소
+          </button>
+          <button type="submit" id="submitBtn" class="submit-btn">
+            등록
+          </button>
         </div>
       </form>
     </div>
@@ -160,12 +165,16 @@
         </div>
         <h3>상품 삭제</h3>
         <p id="deleteMessage">
-          <strong id="deleteProductName"></strong> 상품을 삭제하시겠습니까?<br>
+          <strong id="deleteProductName"></strong> 상품을 삭제하시겠습니까?<br />
           삭제된 상품은 복구할 수 없습니다.
         </p>
         <div class="delete-actions mt-4">
-          <button id="cancelDeleteBtn" class="btn btn-outline-secondary me-2">취소</button>
-          <button id="confirmDeleteBtn" class="btn btn-danger">삭제</button>
+          <button id="cancelDeleteBtn" class="btn btn-outline-secondary me-2">
+            취소
+          </button>
+          <button id="confirmDeleteBtn" class="btn btn-danger">
+            삭제
+          </button>
         </div>
       </div>
     </div>

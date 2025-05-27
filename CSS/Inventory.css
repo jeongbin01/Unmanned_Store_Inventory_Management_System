@@ -1,35 +1,101 @@
-/* ───────── Inventory.css ───────── */
-.main-content {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+/* Inventory.css */
+.main-container {
+  margin-left: 250px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-/* KPI 카드 */
+.header {
+  background: white;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.notification-btn {
+  position: relative;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ef4444;
+  color: white;
+  font-size: .7rem;
+  padding: .2rem .4rem;
+  border-radius: 50%;
+  min-width: 18px;
+  text-align: center;
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.main-content {
+  padding: 1.5rem;
+  flex: 1;
+}
+
+/* ───────── KPI 카드 ───────── */
 .kpi-card {
   background: white;
   border-radius: 12px;
-  padding: 1rem;
+  padding: 1.5rem;
   position: relative;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .kpi-title {
-  font-size: 0.9rem;
+  font-size: .9rem;
   color: #64748b;
+  margin-bottom: .5rem;
 }
 
 .kpi-value {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 700;
-  margin: 0.5rem 0;
+  margin: 0;
+  color: #1e293b;
 }
 
 .kpi-icon {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 1.5rem;
-  opacity: 0.2;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-size: 2rem;
+  opacity: .2;
 }
 
 .kpi-icon.warning {
@@ -40,32 +106,42 @@
   color: #ef4444;
 }
 
-/* 차트 카드 */
+/* ───────── 차트 카드 ───────── */
 .chart-card {
   background: white;
   border-radius: 12px;
-  padding: 1rem;
+  padding: 1.5rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  height: 400px;
 }
 
 .chart-title {
   font-size: 1.1rem;
   font-weight: 600;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
+  color: #1e293b;
 }
 
-/* 컨트롤바 */
+.chart-container {
+  position: relative;
+  height: calc(100% - 40px);
+}
+
+/* ───────── 컨트롤바 ───────── */
 .controls {
   display: flex;
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
+  margin-bottom: 1.5rem;
 }
 
 .search-box {
   position: relative;
-  flex: 1 1 250px;
-  max-width: 350px;
+  flex: 1;
+  min-width: 250px;
+  max-width: 400px;
 }
 
 .search-icon {
@@ -74,101 +150,209 @@
   left: 1rem;
   transform: translateY(-50%);
   color: #6c757d;
+  z-index: 2;
 }
 
 .search-box input {
   padding-left: 2.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: .75rem;
 }
 
 .filter-select {
-  min-width: 140px;
+  min-width: 160px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: .75rem;
 }
 
-/* 테이블 카드 (재고 현황) */
-.table-card .table-header {
+/* ───────── 테이블 ───────── */
+.table-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.table-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .table-title {
   margin: 0;
   font-size: 1.1rem;
   font-weight: 600;
+  color: #1e293b;
 }
 
-.view-all-btn {
-  background: #f1f5f9;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  color: #475569;
-  cursor: not-allowed;
-}
-
-/* 재고 현황 테이블 */
 .custom-table {
   width: 100%;
   border-collapse: collapse;
+  margin: 0;
 }
 
 .custom-table thead th {
   background: #f8fafc;
-  padding: 0.75rem;
+  padding: 1rem;
   font-weight: 600;
   color: #475569;
   border: none;
   text-transform: uppercase;
-  font-size: 0.85rem;
+  font-size: .8rem;
+  letter-spacing: .5px;
 }
 
 .custom-table tbody td {
-  padding: 0.75rem;
+  padding: 1rem;
   border-top: 1px solid #e5e7eb;
   color: #1e293b;
+  vertical-align: middle;
 }
 
 .custom-table tbody tr:hover {
   background: #f8fafc;
 }
 
-/* 재고 상태 배지 */
+/* ───────── 상태 배지 ───────── */
 .status-badge {
   display: inline-block;
-  padding: 0.2rem 0.6rem;
-  font-size: 0.75rem;
+  padding: .25rem .75rem;
+  font-size: .75rem;
   font-weight: 500;
-  border-radius: 0.25rem;
+  border-radius: 20px;
+  margin-right: .5rem;
 }
 
-.status-badge.completed {
-  background-color: #dcfce7;
+.status-badge.충분 {
+  background: #dcfce7;
   color: #166534;
 }
 
-/* 충분 */
-.status-badge.pending {
-  background-color: #fef9c3;
+.status-badge.부족 {
+  background: #fef9c3;
   color: #92400e;
 }
 
-/* 부족 */
-.status-badge.cancelled {
-  background-color: #fee2e2;
+.status-badge.품절 {
+  background: #fee2e2;
   color: #b91c1c;
 }
 
-/* 품절 */
-
-/* 최근 입출고 내역 */
-.tables-section .table-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+.status-badge.입고 {
+  background: #dbeafe;
+  color: #1e40af;
 }
 
-.tables-section .custom-table tbody td i {
-  vertical-align: middle;
+.status-badge.출고 {
+  background: #fce7f3;
+  color: #be185d;
+}
+
+/* ───────── 액션 버튼 ───────── */
+.action-btn {
+  padding: .5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: .85rem;
+  cursor: pointer;
+  margin-right: .5rem;
+  transition: all .2s ease;
+}
+
+.btn-success {
+  background: #10b981;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #059669;
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+}
+
+/* ───────── 반응형 ───────── */
+@media (max-width:768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.active {
+    transform: translateX(0);
+  }
+
+  .main-container {
+    margin-left: 0;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box {
+    max-width: none;
+  }
+
+  .kpi-value {
+    font-size: 1.5rem;
+  }
+
+  .chart-card {
+    height: 300px;
+  }
+}
+
+/* ───────── 모달 ───────── */
+.modal-content {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  border-bottom: 1px solid #e2e8f0;
+  padding: 1.5rem;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  border-top: 1px solid #e2e8f0;
+  padding: 1.5rem;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: .5rem;
+}
+
+.form-control {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: .75rem;
+}
+
+.form-control:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 .2rem rgba(59, 130, 246, 0.25);
 }

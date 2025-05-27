@@ -36,7 +36,6 @@
       <a href="inventory.html" class="nav-link"><i class="fas fa-warehouse"></i>재고 관리</a>
       <a href="sales.html" class="nav-link"><i class="fas fa-chart-line"></i>매출 분석</a>
       <a href="customers.html" class="nav-link"><i class="fas fa-users"></i>고객 관리</a>
-      <a href="settings.html" class="nav-link"><i class="fas fa-cog"></i>설정</a>
     </nav>
   </aside>
 
@@ -59,13 +58,19 @@
 
     <!-- 본문 -->
     <main class="main-content container py-4">
-      <!-- 컨트롤 섹션 -->
-      <div class="controls mb-4">
+
+      <!-- 컨트롤바 -->
+      <div class="controls mb-3">
         <!-- 검색창 -->
         <div class="search-box">
-          <i class="fas fa-search search-icon"></i>
           <input id="searchInput" type="text" class="form-control" placeholder="주문번호 또는 고객명 검색..." />
+          <i class="fas fa-search search-icon"></i>
         </div>
+
+        <!-- 날짜 범위 필터 -->
+        <input id="fromDate" type="date" class="form-control date-input" />
+        <span class="date-sep">~</span>
+        <input id="toDate" type="date" class="form-control date-input" />
 
         <!-- 상태 필터 -->
         <select id="statusFilter" class="form-select filter-select">
@@ -75,6 +80,19 @@
           <option value="완료">완료</option>
           <option value="취소">취소</option>
         </select>
+
+        <!-- 일괄 상태 변경 -->
+        <select id="bulkStatusSelect" class="form-select bulk-select">
+          <option value="">일괄 상태 변경</option>
+          <option value="접수">접수</option>
+          <option value="처리중">처리중</option>
+          <option value="완료">완료</option>
+          <option value="취소">취소</option>
+        </select>
+        <button id="bulkUpdateBtn" class="btn btn-outline-primary btn-apply">적용</button>
+
+        <!-- CSV 내보내기 -->
+        <button id="exportBtn" class="btn btn-success btn-export">CSV 내보내기</button>
       </div>
 
       <!-- 주문 테이블 -->
@@ -82,13 +100,13 @@
         <table class="table table-hover align-middle bg-white rounded shadow-sm">
           <thead class="table-light">
             <tr>
-              <th>주문번호</th>
-              <th>주문일시</th>
-              <th>고객명</th>
-              <th>상품수</th>
-              <th>총액</th>
-              <th>상태</th>
-              <th>상세</th>
+              <th><input type="checkbox" id="selectAll"></th>
+              <th data-sort="id">주문번호 <i class="fas fa-sort"></i></th>
+              <th data-sort="date">주문일시 <i class="fas fa-sort"></i></th>
+              <th data-sort="customer">고객명 <i class="fas fa-sort"></i></th>
+              <th data-sort="count">상품수 <i class="fas fa-sort"></i></th>
+              <th data-sort="total">총액 <i class="fas fa-sort"></i></th>
+              <th data-sort="status">상태 <i class="fas fa-sort"></i></th>
             </tr>
           </thead>
           <tbody id="ordersTableBody">
@@ -96,10 +114,16 @@
           </tbody>
         </table>
       </div>
+
+      <!-- 페이징 -->
+      <nav aria-label="페이지네비게이션">
+        <ul id="pagination" class="pagination justify-content-center mt-3"></ul>
+      </nav>
+
     </main>
   </div>
 
-  <!-- 주문 상세 모달 -->
+  <!-- 주문 상세 모달 (기존 코드 그대로) -->
   <div id="orderModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -109,17 +133,14 @@
         </button>
       </div>
       <div class="modal-body">
-        <!-- 주문 헤더 -->
         <div class="mb-3">
           <span id="modalOrderDate" class="text-muted"></span>
           <span id="modalOrderStatus" class="badge"></span>
         </div>
-        <!-- 고객 정보 -->
         <section class="mb-4">
           <h5>고객 정보</h5>
           <p id="modalCustomerName"></p>
         </section>
-        <!-- 주문 상품 -->
         <section class="mb-4">
           <h5>주문 상품</h5>
           <table class="table table-sm">
@@ -140,12 +161,10 @@
             </tfoot>
           </table>
         </section>
-        <!-- 결제 정보 -->
         <section class="mb-4">
           <h5>결제 정보</h5>
           <p id="modalPaymentInfo"></p>
         </section>
-        <!-- 상태 변경 -->
         <section>
           <div class="d-flex gap-2">
             <select id="modalStatusSelect" class="form-select w-auto">
