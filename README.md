@@ -39,7 +39,7 @@ Chart.js 기반의 시각화와 Bootstrap 5, Font Awesome을 활용한 반응형
 
 ## 기타
 - **기술 스택**  
-  HTML5 · CSS3 (Bootstrap 5, 커스텀 변수) · JavaScript (ES6+) · Chart.js · Font Awesome · LocalStorage  
+  HTML5 · CSS3 Bootstrap · JavaScript · Chart.js · Font Awesome · LocalStorage  
 - **폴더 구조**  
 ```
 
@@ -50,16 +50,15 @@ Chart.js 기반의 시각화와 Bootstrap 5, Font Awesome을 활용한 반응형
 ├── orders.html
 ├── sales.html
 ├── css/
-│   └── styles.css
+│   └── 
 ├── js/
-│   ├── data.js
-│   ├── main.js
-│   ├── products.js
-│   ├── inventory.js
-│   ├── orders.js
-│   └── sales.js
-└── assets/
-└── logo.png
+   ├── data.js
+   ├── main.js
+   ├── products.js
+   ├── inventory.js
+   ├── orders.js
+   └── sales.js
+
 
 ```
 - **배포**  
