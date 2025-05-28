@@ -76,8 +76,6 @@ function initCharts() {
 }
 
 // JS/orders.js
-
-// ① 샘플 주문 데이터 (여기에 10개의 주문을 미리 정의해주세요)
 const initialOrders = [
   {
     id: 'ORD-2025-1001',

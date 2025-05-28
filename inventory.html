@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>재고 관리 - 무인상점</title>
+  <title>재고 관리 - 무인 매장 관리</title>
 
   <!-- 구글 폰트 -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap"
@@ -37,8 +37,6 @@
         <a href="sales.html" class="nav-link"><i class="fas fa-chart-line"></i>매출 분석</a>
       </nav>
     </aside>
-
-    <!-- 사이드바 오버레이 -->
     <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
     <!-- 메인 컨테이너 -->
@@ -46,12 +44,14 @@
       <!-- 헤더 -->
       <header class="header">
         <div class="d-flex align-items-center">
-          <button id="mobileMenuBtn" class="mobile-menu-btn me-3"><i class="fas fa-bars"></i></button>
+          <button id="mobileMenuBtn" class="mobile-menu-btn me-3">
+            <i class="fas fa-bars"></i>
+          </button>
           <h1 class="header-title">재고 관리</h1>
         </div>
         <div class="user-info">
           <button class="notification-btn">
-            <i class="fas fa-bell"></i><span class="notification-badge">3</span>
+            <i class="fas fa-bell"></i>
           </button>
           <span>관리자님</span>
         </div>
@@ -96,21 +96,16 @@
         <!-- 재고 현황 테이블 -->
         <section class="tables-section mb-5">
           <div class="controls">
-            <div class="search-box"><i class="fas fa-search search-icon"></i><input id="invSearchInput" type="text"
-                class="form-control" placeholder="상품명 또는 코드 검색…" /></div>
-            <select id="invCategoryFilter" class="form-select filter-select">
-              <option value="전체">모든 카테고리</option>
-              <option>도시락</option>
-              <option>음료류</option>
-              <option>과자류</option>
-              <option>생활용품</option>
-              <option>기타</option>
-            </select>
+            <div class="search-box">
+              <i class="fas fa-search search-icon"></i>
+              <input id="invSearchInput" type="text" class="form-control" placeholder="상품명 또는 코드 검색…" />
+            </div>
+            <select id="invCategoryFilter" class="form-select filter-select"></select>
             <select id="invStateFilter" class="form-select filter-select">
               <option value="전체">모든 재고 상태</option>
-              <option>충분</option>
-              <option>부족</option>
-              <option>품절</option>
+              <option value="충분">충분</option>
+              <option value="부족">부족</option>
+              <option value="품절">품절</option>
             </select>
           </div>
           <div class="table-card">
@@ -154,79 +149,94 @@
             </div>
           </div>
         </section>
-
-        <!-- 입고 모달 -->
-        <div class="modal fade" id="stockInModal" tabindex="-1" aria-labelledby="stockInModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="stockInModalLabel">재고 입고</h5><button type="button" class="btn-close"
-                  data-bs-dismiss="modal" aria-label="닫기"></button>
-              </div>
-              <div class="modal-body">
-                <div class="mb-3"><label class="form-label">상품</label><input type="text" id="stockInProduct"
-                    class="form-control" disabled /></div>
-                <div class="mb-3"><label class="form-label">현재 재고</label><input type="text" id="stockInCurrent"
-                    class="form-control" disabled /></div>
-                <div class="mb-3"><label class="form-label">수량</label><input type="number" id="stockInQty"
-                    class="form-control" min="1" /></div>
-                <div class="mb-3"><label class="form-label">비고</label><textarea id="stockInNote" class="form-control"
-                    rows="2" placeholder="입고 사유"></textarea></div>
-                <!-- preview -->
-                <div class="preview-section">
-                  <div class="preview-item"><span>현재 재고</span><span id="inPreviewCurrent">0개</span></div>
-                  <div class="preview-item"><span id="inPreviewLabel">입고량</span><span id="inPreviewQty"
-                      class="preview-add">+0개</span></div>
-                  <div class="preview-item preview-expected"><span>예상 재고</span><span id="inPreviewExpected">0개</span>
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer"><button type="button" class="btn btn-secondary"
-                  data-bs-dismiss="modal">취소</button><button type="button" class="btn btn-primary"
-                  id="confirmStockIn">입고 등록</button></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 출고 모달 -->
-        <div class="modal fade" id="stockOutModal" tabindex="-1" aria-labelledby="stockOutModalLabel"
-          aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="stockOutModalLabel">재고 출고</h5><button type="button" class="btn-close"
-                  data-bs-dismiss="modal" aria-label="닫기"></button>
-              </div>
-              <div class="modal-body">
-                <div class="mb-3"><label class="form-label">상품</label><input type="text" id="stockOutProduct"
-                    class="form-control" disabled /></div>
-                <div class="mb-3"><label class="form-label">현재 재고</label><input type="text" id="stockOutCurrent"
-                    class="form-control" disabled /></div>
-                <div class="mb-3"><label class="form-label">수량</label><input type="number" id="stockOutQty"
-                    class="form-control" min="1" /></div>
-                <div class="mb-3"><label class="form-label">비고</label><textarea id="stockOutNote" class="form-control"
-                    rows="2" placeholder="출고 사유"></textarea></div>
-                <!-- preview -->
-                <div class="preview-section">
-                  <div class="preview-item"><span>현재 재고</span><span id="outPreviewCurrent">0개</span></div>
-                  <div class="preview-item"><span id="outPreviewLabel">출고량</span><span id="outPreviewQty"
-                      class="preview-remove">-0개</span></div>
-                  <div class="preview-item preview-expected"><span>예상 재고</span><span id="outPreviewExpected">0개</span>
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer"><button type="button" class="btn btn-secondary"
-                  data-bs-dismiss="modal">취소</button><button type="button" class="btn btn-primary"
-                  id="confirmStockOut">출고 등록</button></div>
-            </div>
-          </div>
-        </div>
       </main>
     </div>
   </div>
 
-  <script src="bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script>
-  <script src="Chart/chart.umd.js"></script>
+  <!-- 입고 모달 -->
+  <div class="modal fade" id="stockInModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">재고 입고</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">상품</label>
+            <input type="text" id="stockInProduct" class="form-control" disabled />
+            <small id="stockInCode" class="text-muted"></small>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">현재 재고</label>
+            <input type="text" id="stockInCurrent" class="form-control" disabled />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">입고 수량</label>
+            <input type="number" id="stockInQty" class="form-control" min="1" placeholder="입고할 수량을 입력하세요" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">비고</label>
+            <textarea id="stockInNote" class="form-control" rows="2" placeholder="입고 사유를 입력하세요"></textarea>
+          </div>
+          <div class="preview-section">
+            <div class="preview-item"><span>현재 재고</span><span id="inPreviewCurrent">0개</span></div>
+            <div class="preview-item"><span>입고량</span><span id="inPreviewQty" class="preview-add">+0개</span></div>
+            <div class="preview-item preview-expected"><span>예상 재고</span><span id="inPreviewExpected">0개</span></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+          <button id="confirmStockIn" class="btn btn-primary">입고 등록</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 출고 모달 -->
+  <div class="modal fade" id="stockOutModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">재고 출고</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">상품</label>
+            <input type="text" id="stockOutProduct" class="form-control" disabled />
+            <small id="stockOutCode" class="text-muted"></small>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">현재 재고</label>
+            <input type="text" id="stockOutCurrent" class="form-control" disabled />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">출고 수량</label>
+            <input type="number" id="stockOutQty" class="form-control" min="1" placeholder="출고할 수량을 입력하세요" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">비고</label>
+            <textarea id="stockOutNote" class="form-control" rows="2" placeholder="출고 사유를 입력하세요"></textarea>
+          </div>
+          <div class="preview-section">
+            <div class="preview-item"><span>현재 재고</span><span id="outPreviewCurrent">0개</span></div>
+            <div class="preview-item"><span>출고량</span><span id="outPreviewQty" class="preview-remove">-0개</span></div>
+            <div class="preview-item preview-expected"><span>예상 재고</span><span id="outPreviewExpected">0개</span></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+          <button id="confirmStockOut" class="btn btn-primary">출고 등록</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 스크립트 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.js"></script>
+
   <script src="JS/common.js"></script>
   <script src="JS/inventory.js"></script>
 </body>
