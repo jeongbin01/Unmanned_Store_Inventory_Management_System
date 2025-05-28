@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>주문 관리</title>
+  <title>무인 매장 관리 시스템</title>
 
   <!-- 구글 폰트 -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap"
@@ -56,9 +56,8 @@
 
     <!-- 본문 -->
     <main class="main-content container py-4">
-
       <!-- 컨트롤바 -->
-      <div class="controls mb-3">
+      <div class="controls">
         <!-- 검색창 -->
         <div class="search-box">
           <input id="searchInput" type="text" class="form-control" placeholder="주문번호 또는 고객명 검색..." />
@@ -75,13 +74,15 @@
         </select>
 
         <!-- CSV 내보내기 -->
-        <button id="exportBtn" class="btn btn-success btn-export">CSV 내보내기</button>
+        <button id="exportBtn" class="btn btn-success btn-export">
+          <i class="fas fa-download me-1"></i>CSV 내보내기
+        </button>
       </div>
 
       <!-- 주문 테이블 -->
       <div class="table-responsive">
         <table class="table table-hover align-middle bg-white rounded shadow-sm">
-          <thead class="table-light">
+          <thead>
             <tr>
               <th><input type="checkbox" id="selectAll"></th>
               <th data-sort="id">주문번호 <i class="fas fa-sort"></i></th>
@@ -90,7 +91,7 @@
               <th data-sort="count">상품수 <i class="fas fa-sort"></i></th>
               <th data-sort="total">총액 <i class="fas fa-sort"></i></th>
               <th data-sort="status">상태 <i class="fas fa-sort"></i></th>
-              <th data-sort="detail">상세보기 <i class="fas fa-sort"></i></th>
+              <th>상세보기</th>
             </tr>
           </thead>
           <tbody id="ordersTableBody">
@@ -103,11 +104,10 @@
       <nav aria-label="페이지네비게이션">
         <ul id="pagination" class="pagination justify-content-center mt-3"></ul>
       </nav>
-
     </main>
   </div>
 
-  <!-- 주문 상세 모달 (기존 코드 그대로) -->
+  <!-- 주문 상세 모달 -->
   <div id="orderModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -117,52 +117,67 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="mb-3">
+        <div class="mb-3 d-flex justify-content-between align-items-center">
           <span id="modalOrderDate" class="text-muted"></span>
           <span id="modalOrderStatus" class="badge"></span>
         </div>
+
         <section class="mb-4">
-          <h5>고객 정보</h5>
-          <p id="modalCustomerName"></p>
+          <h5><i class="fas fa-user me-2"></i>고객 정보</h5>
+          <div class="bg-light p-3 rounded">
+            <p id="modalCustomerName" class="mb-0"></p>
+          </div>
         </section>
+
         <section class="mb-4">
-          <h5>주문 상품</h5>
-          <table class="table table-sm">
-            <thead>
-              <tr>
-                <th>상품코드</th>
-                <th>상품명</th>
-                <th>수량</th>
-                <th>소계</th>
-              </tr>
-            </thead>
-            <tbody id="modalItemsBody"></tbody>
-            <tfoot>
-              <tr>
-                <th colspan="3" class="text-end">총계</th>
-                <th id="modalTotalPrice"></th>
-              </tr>
-            </tfoot>
-          </table>
+          <h5><i class="fas fa-shopping-bag me-2"></i>주문 상품</h5>
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead class="table-light">
+                <tr>
+                  <th>상품코드</th>
+                  <th>상품명</th>
+                  <th>수량</th>
+                  <th>소계</th>
+                </tr>
+              </thead>
+              <tbody id="modalItemsBody"></tbody>
+              <tfoot>
+                <tr class="fw-bold">
+                  <th colspan="3" class="text-end">총계</th>
+                  <th id="modalTotalPrice"></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
         </section>
+
         <section class="mb-4">
-          <h5>결제 정보</h5>
-          <p id="modalPaymentInfo"></p>
+          <h5><i class="fas fa-credit-card me-2"></i>결제 정보</h5>
+          <div class="bg-light p-3 rounded">
+            <p id="modalPaymentInfo" class="mb-0"></p>
+          </div>
         </section>
+
         <section>
+          <h5><i class="fas fa-edit me-2"></i>상태 변경</h5>
           <div class="d-flex gap-2">
             <select id="modalStatusSelect" class="form-select w-auto">
-              <option>접수</option>
-              <option>처리중</option>
-              <option>완료</option>
-              <option>취소</option>
+              <option value="접수">접수</option>
+              <option value="처리중">처리중</option>
+              <option value="완료">완료</option>
+              <option value="취소">취소</option>
             </select>
-            <button id="modalUpdateBtn" class="btn btn-primary">상태 변경</button>
+            <button id="modalUpdateBtn" class="btn btn-primary">
+              <i class="fas fa-check me-1"></i>상태 변경
+            </button>
           </div>
         </section>
       </div>
-      <div class="modal-footer text-end">
-        <button id="modalCloseBtn" class="btn btn-outline-secondary">닫기</button>
+      <div class="modal-footer">
+        <button id="modalCloseBtn" class="btn btn-secondary">
+          <i class="fas fa-times me-1"></i>닫기
+        </button>
       </div>
     </div>
   </div>
