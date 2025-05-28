@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>매출 분석 - 무인상점</title>
-
+    <title>매출 분석 - 무인 매장 관리</title>
     <!-- 구글 폰트 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap"
         rel="stylesheet" />
@@ -13,18 +12,17 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet" />
     <!-- Bootstrap -->
     <link href="bootstrap-4.6.2-dist/css/bootstrap.min.css" rel="stylesheet" />
-
     <!-- 공통 스타일 -->
     <link href="CSS/common.css" rel="stylesheet" />
-    <!-- 대시보드 스타일 -->
+    <!-- Dashboard 스타일 -->
     <link href="CSS/Dashboard.css" rel="stylesheet" />
-    <!-- 매출분석 전용 -->
+    <!-- 매출분석 전용 스타일 -->
     <link href="CSS/sales.css" rel="stylesheet" />
     <!-- Chart.js -->
     <script src="Chart/chart.umd.js"></script>
 </head>
 
-<body style="font-family:'Noto Sans KR',sans-serif;">
+<body>
     <!-- 사이드바 -->
     <aside id="sidebar" class="sidebar">
         <div class="sidebar-brand">
@@ -44,138 +42,133 @@
     <div class="main-container">
         <!-- 헤더 -->
         <header class="header d-flex justify-content-between align-items-center">
-            <button id="mobileMenuBtn" class="mobile-menu-btn">
-                <i class="fas fa-bars"></i>
-            </button>
+            <button id="mobileMenuBtn" class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
             <h1 class="header-title">매출 분석</h1>
             <div class="user-info">
-                <button class="notification-btn">
-                    <i class="fas fa-bell"></i>
-                </button>
+                <button class="notification-btn"><i class="fas fa-bell"></i></button>
                 <span>관리자님</span>
             </div>
         </header>
 
         <!-- 본문 -->
-        <main class="main-content container-fluid py-4">
-            <!-- 기간 선택 -->
-            <div class="d-flex align-items-center mb-4">
-                <i class="far fa-calendar-alt mr-2"></i>
-                <span id="dateRange" class="font-weight-medium"></span>
+        <main class="main-content container-fluid">
+            <!-- 필터 바 -->
+            <div class="filter-bar mb-4" >
+                <div class="filter-item me-4"><i class="far fa-calendar-alt me-2"></i><span id="dateRange">2025년 7월 9일
+                        (수) - 2025년 7월 15일 (화)</span></div>
+                <div class="filter-item btn-group me-auto">
+                    <button type="button" class="btn btn-outline-primary interval-btn active"
+                        data-interval="daily">일별</button>
+                    <button type="button" class="btn btn-outline-primary interval-btn"
+                        data-interval="weekly">주별</button>
+                    <button type="button" class="btn btn-outline-primary interval-btn"
+                        data-interval="monthly">월별</button>
+                </div>
+                <div class="filter-item d-flex">
+                    <button class="btn btn-outline-secondary me-2"><i class="fas fa-filter"></i> 상세 필터</button>
+                    <button class="btn btn-outline-secondary"><i class="fas fa-file-export"></i> 내보내기</button>
+                </div>
             </div>
 
-            <!-- KPI Cards -->
-            <section class="row g-4 mb-4">
-                <div class="col-lg-2 col-md-4">
+
+            <!-- KPI 카드 -->
+            <section class="row g-3 mb-4">
+                <div class="col-6 col-md-2">
                     <div class="card kpi-card">
                         <p class="kpi-title">총 매출</p>
                         <h3 id="kpiTotalSales" class="kpi-value">0원</h3>
-                        <p class="kpi-change" id="kpiSalesChange">▲0%</p>
+                        <p id="kpiSalesChange" class="kpi-change">▲0% 지난 주 대비</p>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-4">
+                <div class="col-6 col-md-2">
                     <div class="card kpi-card">
                         <p class="kpi-title">총 거래 건수</p>
                         <h3 id="kpiTotalOrders" class="kpi-value">0건</h3>
-                        <p class="kpi-change" id="kpiOrdersChange">▲0%</p>
+                        <p id="kpiOrdersChange" class="kpi-change">▲0% 지난 주 대비</p>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-4">
+                <div class="col-6 col-md-2">
                     <div class="card kpi-card">
                         <p class="kpi-title">총 수익</p>
                         <h3 id="kpiTotalProfit" class="kpi-value">0원</h3>
-                        <p class="kpi-change" id="kpiProfitChange">▲0%</p>
+                        <p id="kpiProfitChange" class="kpi-change">▲0% 지난 주 대비</p>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-4">
+                <div class="col-6 col-md-2">
                     <div class="card kpi-card">
                         <p class="kpi-title">평균 주문액</p>
                         <h3 id="kpiAvgOrder" class="kpi-value">0원</h3>
-                        <p class="kpi-change" id="kpiAvgOrderChange">▲0%</p>
+                        <p id="kpiAvgOrderChange" class="kpi-change">▲0% 지난 주 대비</p>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-4">
+                <div class="col-6 col-md-2">
                     <div class="card kpi-card">
                         <p class="kpi-title">평균 수익률</p>
                         <h3 id="kpiAvgROI" class="kpi-value">0%</h3>
-                        <p class="kpi-change" id="kpiROIChange">▲0%</p>
+                        <p id="kpiROIChange" class="kpi-change text-danger">▼0% 지난 주 대비</p>
                     </div>
                 </div>
             </section>
 
-            <!-- Interval & 버튼 -->
-            <div class="d-flex align-items-center mb-4">
-                <div class="btn-group btn-interval mr-3" role="group">
-                    <button type="button" class="btn btn-outline-primary active" data-interval="daily">일별</button>
-                    <button type="button" class="btn btn-outline-primary" data-interval="weekly">주별</button>
-                    <button type="button" class="btn btn-outline-primary" data-interval="monthly">월별</button>
-                </div>
-                <button class="btn btn-outline-secondary mr-2"><i class="fas fa-filter"></i> 상세 필터</button>
-                <button class="btn btn-outline-secondary"><i class="fas fa-file-export"></i> 내보내기</button>
-            </div>
-
-            <!-- Charts -->
+            <!-- 차트 섹션 1 -->
             <section class="row g-4 mb-4">
                 <div class="col-lg-8">
                     <div class="card chart-card">
-                        <h5 class="chart-title">일일 매출 및 거래 건수</h5>
-                        <canvas id="salesOrdersChart"></canvas>
+                        <h5 class="chart-title">매출 및 거래 건수</h5>
+                        <div class="chart-container"><canvas id="salesOrdersChart"></canvas></div>
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="card chart-card">
-                        <h5 class="chart-title">일일 수익</h5>
-                        <canvas id="profitChart"></canvas>
+                        <h5 class="chart-title">수익</h5>
+                        <div class="chart-container"><canvas id="profitChart"></canvas></div>
                     </div>
                 </div>
             </section>
 
+            <!-- 차트 섹션 2 -->
             <section class="row g-4 mb-4">
                 <div class="col-lg-6">
-                    <div class="card chart-card">
-                        <h5 class="chart-title">카테고리별 매출</h5>
-                        <canvas id="categoryChart"></canvas>
-                        <ul id="categoryList" class="list-unstyled mt-3"></ul>
+                    <div class="card chart-card d-flex flex-column flex-lg-row p-3 gap-3">
+                        <div class="flex-shrink-0 chart-container" style="max-width:200px;"><canvas
+                                id="categoryChart"></canvas></div>
+                        <ul id="categoryList" class="list-unstyled flex-grow-1 m-0"></ul>
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div class="card chart-card">
-                        <h5 class="chart-title">결제 수단별 매출</h5>
-                        <canvas id="paymentChart"></canvas>
-                        <ul id="paymentList" class="list-unstyled mt-3"></ul>
+                    <div class="card chart-card d-flex flex-column flex-lg-row p-3 gap-3">
+                        <div class="flex-shrink-0 chart-container" style="max-width:200px;"><canvas
+                                id="paymentChart"></canvas></div>
+                        <ul id="paymentList" class="list-unstyled flex-grow-1 m-0"></ul>
                     </div>
                 </div>
             </section>
 
-            <!-- Daily Details Table -->
-            <section class="card p-4">
+            <!-- 상세 테이블 -->
+            <section class="card p-3 mb-5">
                 <h5 class="mb-3">일별 매출 상세</h5>
                 <div class="table-responsive">
-                    <table class="table detail-table">
+                    <table class="table detail-table mb-0">
                         <thead>
                             <tr>
                                 <th>날짜</th>
                                 <th>매출</th>
-                                <th>거래 건수</th>
+                                <th>건수</th>
                                 <th>평균 주문액</th>
                                 <th>수익</th>
                                 <th>수익률</th>
                             </tr>
                         </thead>
-                        <tbody id="detailTableBody">
-                            <!-- JS 생성 -->
-                        </tbody>
+                        <tbody id="detailTableBody"></tbody>
                     </table>
                 </div>
             </section>
         </main>
     </div>
 
-    <!-- Bootstrap JS -->
+    <!-- JS -->
     <script src="bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script>
-    <!-- 공통 -->
     <script src="JS/common.js"></script>
-    <!-- 매출분석 로직 -->
     <script src="JS/sales.js"></script>
 </body>
 

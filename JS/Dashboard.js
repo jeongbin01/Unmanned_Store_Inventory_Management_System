@@ -45,7 +45,7 @@ function initCharts() {
   new Chart(prodCtx, {
     type: 'doughnut',
     data: {
-      labels: ['음료', '과자', '아이스크림', '컵라면', '기타'],
+      labels: ['전자제품', '의류/신발', '생활용품', '도서/문구', '식품/음료료'],
       datasets: [{ data: [35, 25, 20, 15, 5], backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'] }]
     },
     options: {
@@ -191,10 +191,9 @@ function initTables() {
 document.addEventListener('DOMContentLoaded', initTables);
 
 
-// 재고 부족 예시
+// 재고 부족 
 const lowStock = [
-  { name: '코카콜라 500ml', stock: 3, level: 'low' },
-  { name: '하겐다즈', stock: 2, level: 'low' }
+  { name: '	스타벅스 텀블러', stock: 0, level: 'low' },
 ];
 const stockTbody = document.getElementById('stockTable');
 lowStock.forEach(item => {

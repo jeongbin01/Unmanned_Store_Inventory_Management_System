@@ -1,201 +1,124 @@
 /* 본문 여백 */
 .main-content.container {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
-/* ───────── 컨트롤바 ───────── */
+/* 컨트롤바 */
 .controls {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
-
 .search-box {
-    position: relative;
-    flex: 1 1 250px;
-    min-width: 200px;
+  position: relative;
+  flex: 1 1 250px;
+  min-width: 200px;
 }
-
 .search-box input {
-    padding-left: 2.5rem;
+  padding-left: 2.5rem;
 }
-
 .search-icon {
-    position: absolute;
-    left: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #6c757d;
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
 }
-
 .date-input {
-    width: 150px;
-    height: 40px;
-    padding: 0 0.5rem;
+  width: 150px;
+  height: 40px;
+  padding: 0 0.5rem;
 }
-
 .date-sep {
-    margin: 0 0.5rem;
-    font-size: 1.2rem;
-    color: #555;
+  margin: 0 0.5rem;
+  font-size: 1.2rem;
+  color: #555;
 }
-
-.filter-select,
-.bulk-select {
-    width: 150px;
-    height: 40px;
+.filter-select {
+  width: 150px;
 }
-
-.btn-apply {
-    height: 40px;
-}
-
 .btn-export {
-    height: 40px;
+  height: 40px;
 }
 
-/* ───────── 테이블 ───────── */
+/* 테이블 */
 .table thead th {
-    cursor: pointer;
-    user-select: none;
+  cursor: pointer;
+  user-select: none;
 }
-
 .table thead th i {
-    margin-left: 4px;
-    font-size: 0.75rem;
-    color: #ccc;
+  margin-left: 4px;
+  font-size: 0.75rem;
+  color: #ccc;
 }
-
 .table thead th.asc i {
-    transform: rotate(180deg);
-    color: #333;
+  transform: rotate(180deg);
+  color: #333;
 }
-
 .table thead th.desc i {
-    color: #333;
+  color: #333;
 }
-
 .table-hover tbody tr:hover {
-    background: #f1f5f9;
+  background: #f1f5f9;
 }
-
-/* 전체 선택 체크박스 */
 #selectAll {
-    transform: scale(1.2);
+  transform: scale(1.2);
 }
 
-/* 액션 버튼 (상세 보기) */
+/* 액션 버튼 */
 .action-btn.view-btn {
-    background: none;
-    border: none;
-    color: #444;
-    padding: 0.25rem;
-    border-radius: 0.25rem;
+  background: none;
+  border: none;
+  color: #444;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
 }
-
 .action-btn.view-btn:hover {
-    background: rgba(0, 0, 0, 0.05);
-    color: #000;
+  background: rgba(0,0,0,0.05);
+  color: #000;
 }
 
-/* ───────── 페이징 ───────── */
+/* 페이징 */
 .pagination {
-    margin-top: 1rem;
+  margin-top: 1rem;
 }
 
-/* ───────── 상태 배지 ───────── */
+/* 상태 배지 */
 .badge {
-    display: inline-block;
-    padding: 0.25rem 0.6rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    border-radius: 0.25rem;
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 0.25rem;
 }
+.badge.status-완료    { background: #dcfce7; color: #166534; }
+.badge.status-처리중 { background: #dbeafe; color: #1e3a8a; }
+.badge.status-접수    { background: #fef9c3; color: #92400e; }
+.badge.status-취소    { background: #fee2e2; color: #b91c1c; }
 
-.badge.status-완료 {
-    background-color: #dcfce7;
-    color: #166534;
-}
-
-.badge.status-처리중 {
-    background-color: #dbeafe;
-    color: #1e3a8a;
-}
-
-.badge.status-접수 {
-    background-color: #fef9c3;
-    color: #92400e;
-}
-
-.badge.status-취소 {
-    background-color: #fee2e2;
-    color: #b91c1c;
-}
-
-/* ───────── 모달 기본 ───────── */
+/* 모달 */
 .modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    align-items: center;
-    justify-content: center;
-    z-index: 1050;
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
 }
-
 .modal.show {
-    display: flex;
+  display: flex;
 }
-
 .modal-content {
-    background: #fff;
-    border-radius: 0.5rem;
-    width: 100%;
-    max-width: 600px;
-    overflow: hidden;
-    animation: fadeIn 0.2s ease;
+  background: #fff;
+  border-radius: 0.5rem;
+  width: 100%;
+  max-width: 600px;
+  animation: fadeIn 0.2s ease;
 }
-
-.modal-header,
-.modal-footer {
-    padding: 1rem;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.modal-body {
-    padding: 1rem;
-    max-height: 70vh;
-    overflow-y: auto;
-}
-
-.close-btn {
-    background: none;
-    border: none;
-    font-size: 1.25rem;
-    color: #6b7280;
-    cursor: pointer;
-}
-
-.close-btn:hover {
-    color: #1f2937;
-}
-
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
