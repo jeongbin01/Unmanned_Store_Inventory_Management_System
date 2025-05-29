@@ -182,10 +182,13 @@
     </div>
   </div>
 
-  <!-- 스크립트 로딩 순서 주의 -->
-  <script src="bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script>
+  <!-- jQuery 먼저 -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Bootstrap Bundle (Popper 포함) -->
+  <script src="bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script>
+  <!-- 공통 스크립트 -->
   <script src="JS/common.js"></script>
+  <!-- 페이지 전용 스크립트 -->
   <script src="JS/Orders.js" defer></script>
 </body>
 

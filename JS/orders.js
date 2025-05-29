@@ -43,7 +43,7 @@ function generateRandomOrder() {
   d.setDate(getRandomInt(1, 28));
   d.setHours(getRandomInt(0, 23), getRandomInt(0, 59));
 
-  const total = items.reduce((sum, item) => sum + item.qty * item.price, 0);
+  const total = items.reduce((sum, i) => sum + i.qty * i.price, 0);
 
   return {
     id: `ORD-2025-${getRandomInt(1000, 9999)}`,
@@ -71,7 +71,6 @@ const selectAllBtn = document.getElementById('selectAll');
 const mobileMenuBtn = document.getElementById('mobileMenuBtn');
 const sidebar = document.getElementById('sidebar');
 
-// modal elements
 const orderModal = document.getElementById('orderModal');
 const closeOrderModal = document.getElementById('closeOrderModal');
 const modalOrderId = document.getElementById('modalOrderId');
@@ -93,20 +92,20 @@ function renderOrders() {
     return;
   }
 
-  ordersTableBody.innerHTML = filteredOrders.map(order => {
-    const count = order.items.reduce((s, i) => s + i.qty, 0);
+  ordersTableBody.innerHTML = filteredOrders.map(o => {
+    const count = o.items.reduce((s, i) => s + i.qty, 0);
     return `
       <tr>
-        <td><input type="checkbox" class="order-checkbox" data-id="${order.id}"></td>
-        <td class="fw-medium">${order.id}</td>
-        <td>${order.date}</td>
-        <td>${order.customer}</td>
+        <td><input type="checkbox" class="order-checkbox" data-id="${o.id}"></td>
+        <td class="fw-medium">${o.id}</td>
+        <td>${o.date}</td>
+        <td>${o.customer}</td>
         <td>${count}개</td>
-        <td class="fw-medium">${order.totalPrice}</td>
-        <td><span class="badge status-${order.status}">${order.status}</span></td>
+        <td class="fw-medium">${o.totalPrice}</td>
+        <td><span class="badge status-${o.status}">${o.status}</span></td>
         <td>
           <button class="action-btn view-btn"
-                  onclick="openOrderModal('${order.id}')"
+                  onclick="openOrderModal('${o.id}')"
                   title="상세보기">
             <i class="fas fa-eye"></i>
           </button>
@@ -123,7 +122,7 @@ function filterOrders() {
   filteredOrders = orders.filter(o => {
     const bySearch = o.id.toLowerCase().includes(term)
       || o.customer.toLowerCase().includes(term);
-    const byStatus = (status === '전체') || o.status === status;
+    const byStatus = status === '전체' || o.status === status;
     return bySearch && byStatus;
   });
 
@@ -162,23 +161,26 @@ function applySorting() {
         break;
       case 'status': A = a.status; B = b.status; break;
     }
-    return currentSort.direction === 'asc' ? (A < B ? -1 : A > B ? 1 : 0)
-      : (A > B ? -1 : A < B ? 1 : 0);
+    if (A < B) return currentSort.direction === 'asc' ? -1 : 1;
+    if (A > B) return currentSort.direction === 'asc' ? 1 : -1;
+    return 0;
   });
 }
 
 function updateSortIcons() {
   document.querySelectorAll('th[data-sort] i')
-    .forEach(icon => icon.className = 'fas fa-sort');
+    .forEach(ic => ic.className = 'fas fa-sort');
   if (currentSort.field) {
-    const sel = document.querySelector(`th[data-sort="${currentSort.field}"] i`);
-    sel.className = currentSort.direction === 'asc'
+    const ic = document.querySelector(
+      `th[data-sort="${currentSort.field}"] i`
+    );
+    ic.className = currentSort.direction === 'asc'
       ? 'fas fa-sort-up'
       : 'fas fa-sort-down';
   }
 }
 
-// 10) 모달 열기
+// 10) 모달
 function openOrderModal(id) {
   const o = orders.find(x => x.id === id);
   if (!o) return;
@@ -206,25 +208,23 @@ function openOrderModal(id) {
   orderModal.classList.add('show');
 }
 
-// 11) 모달 닫기
 function closeModal() {
   orderModal.classList.remove('show');
 }
 
-// 12) 상태 변경
 function updateOrderStatus() {
-  const newStatus = modalStatusSelect.value;
+  const newSt = modalStatusSelect.value;
   const id = modalOrderId.textContent;
   const o = orders.find(x => x.id === id);
-  if (o) {
-    o.status = newStatus;
-    filterOrders();
-    closeModal();
-    showNotification(`주문 ${id}의 상태가 '${newStatus}'로 변경되었습니다.`, 'success');
-  }
+  if (!o) return;
+
+  o.status = newSt;
+  filterOrders();
+  closeModal();
+  showNotification(`주문 ${id}의 상태가 '${newSt}'로 변경되었습니다.`, 'success');
 }
 
-// 13) 알림
+// 11) 알림
 function showNotification(message, type = 'success') {
   const alertClass = type === 'warning' ? 'alert-warning' : 'alert-success';
   const iconClass = type === 'warning'
@@ -233,7 +233,8 @@ function showNotification(message, type = 'success') {
 
   const n = document.createElement('div');
   n.className = `alert ${alertClass} position-fixed alert-dismissible`;
-  n.style.cssText = 'top:20px; right:20px; z-index:9999; min-width:300px; box-shadow:0 4px 6px rgba(0,0,0,0.1);';
+  n.style.cssText = 'top:20px; right:20px; z-index:9999; min-width:300px; ' +
+    'box-shadow:0 4px 6px rgba(0,0,0,0.1);';
   n.innerHTML = `
     <i class="${iconClass} me-2"></i>${message}
     <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
@@ -247,7 +248,7 @@ function showNotification(message, type = 'success') {
   }, 3000);
 }
 
-// 14) CSV 내보내기
+// 12) CSV 내보내기
 function exportCSV() {
   const headers = ['주문번호', '주문일시', '고객명', '상품수', '총액', '상태'];
   const rows = [headers.join(',')];
@@ -265,7 +266,9 @@ function exportCSV() {
     ].join(','));
   });
 
-  const blob = new Blob(['\uFEFF' + rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const blob = new Blob(['\uFEFF' + rows.join('\n')], {
+    type: 'text/csv;charset=utf-8;'
+  });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -278,18 +281,60 @@ function exportCSV() {
   showNotification('CSV 파일이 다운로드되었습니다.', 'success');
 }
 
-// 15) 전체 선택/해제
+// 13) 전체선택
 function handleSelectAll() {
   document.querySelectorAll('.order-checkbox')
     .forEach(cb => cb.checked = selectAllBtn.checked);
 }
 
-// 16) 모바일 메뉴 토글
+// 14) 모바일 메뉴
 function toggleMobileMenu() {
   sidebar.classList.toggle('show');
 }
 
-// 17) 이벤트 등록
+// 15) 추가 유틸 (예시)
+function addNewOrder() {
+  const o = generateRandomOrder();
+  orders.unshift(o);
+  filterOrders();
+  showNotification('새 주문이 추가되었습니다.', 'success');
+}
+
+function bulkUpdateStatus(newSt) {
+  const ids = Array.from(document.querySelectorAll(
+    '.order-checkbox:checked'
+  )).map(cb => cb.dataset.id);
+  if (!ids.length) {
+    showNotification('선택된 주문이 없습니다.', 'warning');
+    return;
+  }
+  ids.forEach(id => {
+    const o = orders.find(x => x.id === id);
+    if (o) o.status = newSt;
+  });
+  filterOrders();
+  selectAllBtn.checked = false;
+  showNotification(
+    `${ids.length}개 주문 상태를 '${newSt}'로 변경했습니다.`,
+    'success'
+  );
+}
+
+function getOrderStats() {
+  return {
+    total: orders.length,
+    접수: orders.filter(o => o.status === '접수').length,
+    처리중: orders.filter(o => o.status === '처리중').length,
+    완료: orders.filter(o => o.status === '완료').length,
+    취소: orders.filter(o => o.status === '취소').length,
+    totalRevenue:
+      orders
+        .filter(o => o.status === '완료')
+        .reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.qty * i.price, 0), 0)
+  };
+}
+
+// 16) DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
   renderOrders();
 
@@ -331,42 +376,5 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// 18) 전역 노출 (모달 열기용)
+// 17) 전역 노출 (모달 열기)
 window.openOrderModal = openOrderModal;
-
-// 19) 추가 헬퍼
-function addNewOrder() {
-  const o = generateRandomOrder();
-  orders.unshift(o);
-  filterOrders();
-  showNotification('새 주문이 추가되었습니다.', 'success');
-}
-
-function bulkUpdateStatus(newStatus) {
-  const ids = Array.from(document.querySelectorAll('.order-checkbox:checked'))
-    .map(cb => cb.dataset.id);
-  if (!ids.length) {
-    showNotification('선택된 주문이 없습니다.', 'warning');
-    return;
-  }
-  ids.forEach(id => {
-    const o = orders.find(x => x.id === id);
-    if (o) o.status = newStatus;
-  });
-  filterOrders();
-  selectAllBtn.checked = false;
-  showNotification(`${ids.length}개 주문 상태를 '${newStatus}'로 변경했습니다.`, 'success');
-}
-
-function getOrderStats() {
-  return {
-    total: orders.length,
-    접수: orders.filter(o => o.status === '접수').length,
-    처리중: orders.filter(o => o.status === '처리중').length,
-    완료: orders.filter(o => o.status === '완료').length,
-    취소: orders.filter(o => o.status === '취소').length,
-    totalRevenue: orders
-      .filter(o => o.status === '완료')
-      .reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.qty * i.price, 0), 0)
-  };
-}
