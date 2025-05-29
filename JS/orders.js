@@ -1,3 +1,6 @@
+// js/Orders.js
+'use strict';
+
 // 1) 상품 카탈로그
 const productCatalog = [
   { code: 'P1001', name: '삼성 갤럭시 S24', price: 1200000 },
@@ -32,12 +35,7 @@ function generateRandomOrder() {
   for (let i = 0; i < itemCount; i++) {
     const p = productCatalog[getRandomInt(0, productCatalog.length - 1)];
     const qty = getRandomInt(1, 3);
-    items.push({
-      code: p.code,
-      name: p.name,
-      qty: qty,
-      price: p.price
-    });
+    items.push({ code: p.code, name: p.name, qty, price: p.price });
   }
 
   const d = new Date();
@@ -52,7 +50,7 @@ function generateRandomOrder() {
     id: `ORD-2025-${getRandomInt(1000, 9999)}`,
     date: d.toISOString().slice(0, 16).replace('T', ' '),
     customer: customers[getRandomInt(0, customers.length - 1)],
-    items: items,
+    items,
     status: statuses[getRandomInt(0, statuses.length - 1)],
     payment: `${payments[getRandomInt(0, payments.length - 1)]} ****-****-${getRandomInt(1000, 9999)}`,
     totalPrice: total.toLocaleString() + '원'
@@ -97,44 +95,44 @@ function renderOrders() {
   }
 
   ordersTableBody.innerHTML = filteredOrders.map(order => {
-    const itemCount = order.items.reduce((sum, item) => sum + item.qty, 0);
+    const itemCount = order.items.reduce((sum, i) => sum + i.qty, 0);
     return `
-          <tr>
-            <td><input type="checkbox" class="order-checkbox" data-id="${order.id}"></td>
-            <td class="fw-medium">${order.id}</td>
-            <td>${order.date}</td>
-            <td>${order.customer}</td>
-            <td>${itemCount}개</td>
-            <td class="fw-medium">${order.totalPrice}</td>
-            <td><span class="badge status-${order.status}">${order.status}</span></td>
-            <td>
-              <button class="action-btn view-btn" onclick="openOrderModal('${order.id}')" title="상세보기">
-                <i class="fas fa-eye"></i>
-              </button>
-            </td>
-          </tr>
-        `;
+      <tr>
+        <td><input type="checkbox" class="order-checkbox" data-id="${order.id}"></td>
+        <td class="fw-medium">${order.id}</td>
+        <td>${order.date}</td>
+        <td>${order.customer}</td>
+        <td>${itemCount}개</td>
+        <td class="fw-medium">${order.totalPrice}</td>
+        <td><span class="badge status-${order.status}">${order.status}</span></td>
+        <td>
+          <button class="action-btn view-btn"
+                  onclick="openOrderModal('${order.id}')"
+                  title="상세보기">
+            <i class="fas fa-eye"></i>
+          </button>
+        </td>
+      </tr>`;
   }).join('');
 }
 
 // 8) 필터링
 function filterOrders() {
-  const searchTerm = searchInput.value.trim().toLowerCase();
-  const statusValue = statusFilter.value;
+  const term = searchInput.value.trim().toLowerCase();
+  const status = statusFilter.value;
 
-  filteredOrders = orders.filter(order => {
-    const matchesSearch = order.id.toLowerCase().includes(searchTerm) ||
-      order.customer.toLowerCase().includes(searchTerm);
-    const matchesStatus = statusValue === '전체' || order.status === statusValue;
-
-    return matchesSearch && matchesStatus;
+  filteredOrders = orders.filter(o => {
+    const bySearch = o.id.toLowerCase().includes(term)
+      || o.customer.toLowerCase().includes(term);
+    const byStatus = (status === '전체') || o.status === status;
+    return bySearch && byStatus;
   });
 
   applySorting();
   renderOrders();
 }
 
-// 9) 정렬 기능
+// 9) 정렬
 function sortOrders(field) {
   if (currentSort.field === field) {
     currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
@@ -142,7 +140,6 @@ function sortOrders(field) {
     currentSort.field = field;
     currentSort.direction = 'asc';
   }
-
   applySorting();
   renderOrders();
   updateSortIcons();
@@ -150,86 +147,64 @@ function sortOrders(field) {
 
 function applySorting() {
   if (!currentSort.field) return;
-
   filteredOrders.sort((a, b) => {
-    let valueA, valueB;
-
+    let A, B;
     switch (currentSort.field) {
-      case 'id':
-        valueA = a.id;
-        valueB = b.id;
-        break;
-      case 'date':
-        valueA = new Date(a.date);
-        valueB = new Date(b.date);
-        break;
-      case 'customer':
-        valueA = a.customer;
-        valueB = b.customer;
-        break;
+      case 'id': A = a.id; B = b.id; break;
+      case 'date': A = new Date(a.date); B = new Date(b.date); break;
+      case 'customer': A = a.customer; B = b.customer; break;
       case 'count':
-        valueA = a.items.reduce((sum, item) => sum + item.qty, 0);
-        valueB = b.items.reduce((sum, item) => sum + item.qty, 0);
+        A = a.items.reduce((s, i) => s + i.qty, 0);
+        B = b.items.reduce((s, i) => s + i.qty, 0);
         break;
       case 'total':
-        valueA = a.items.reduce((sum, item) => sum + (item.qty * item.price), 0);
-        valueB = b.items.reduce((sum, item) => sum + (item.qty * item.price), 0);
+        A = a.items.reduce((s, i) => s + i.qty * i.price, 0);
+        B = b.items.reduce((s, i) => s + i.qty * i.price, 0);
         break;
-      case 'status':
-        valueA = a.status;
-        valueB = b.status;
-        break;
-      default:
-        return 0;
+      case 'status': A = a.status; B = b.status; break;
     }
-
-    if (valueA < valueB) return currentSort.direction === 'asc' ? -1 : 1;
-    if (valueA > valueB) return currentSort.direction === 'asc' ? 1 : -1;
+    if (A < B) return currentSort.direction === 'asc' ? -1 : 1;
+    if (A > B) return currentSort.direction === 'asc' ? 1 : -1;
     return 0;
   });
 }
 
 function updateSortIcons() {
-  // 모든 정렬 아이콘 초기화
-  document.querySelectorAll('th[data-sort] i').forEach(icon => {
-    icon.className = 'fas fa-sort';
-  });
-
-  // 현재 정렬 필드 아이콘 업데이트
+  document.querySelectorAll('th[data-sort] i')
+    .forEach(icon => icon.className = 'fas fa-sort');
   if (currentSort.field) {
-    const currentHeader = document.querySelector(`th[data-sort="${currentSort.field}"] i`);
-    if (currentHeader) {
-      currentHeader.className = currentSort.direction === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down';
-    }
+    const sel = document.querySelector(`th[data-sort="${currentSort.field}"] i`);
+    sel.className = currentSort.direction === 'asc'
+      ? 'fas fa-sort-up'
+      : 'fas fa-sort-down';
   }
 }
 
 // 10) 모달 열기
-function openOrderModal(orderId) {
-  const order = orders.find(o => o.id === orderId);
-  if (!order) return;
+function openOrderModal(id) {
+  const o = orders.find(x => x.id === id);
+  if (!o) return;
 
-  modalOrderId.textContent = order.id;
-  modalOrderDate.textContent = order.date;
-  modalCustomer.textContent = order.customer;
-  modalPayment.textContent = order.payment;
-  modalOrderStatus.textContent = order.status;
-  modalOrderStatus.className = `badge status-${order.status}`;
+  modalOrderId.textContent = o.id;
+  modalOrderDate.textContent = o.date;
+  modalCustomer.textContent = o.customer;
+  modalPayment.textContent = o.payment;
+  modalOrderStatus.textContent = o.status;
+  modalOrderStatus.className = `badge status-${o.status}`;
 
-  modalItemsBody.innerHTML = order.items.map(item => {
-    const subtotal = (item.qty * item.price).toLocaleString() + '원';
+  modalItemsBody.innerHTML = o.items.map(item => {
+    const sub = (item.qty * item.price).toLocaleString() + '원';
     return `
-          <tr>
-            <td class="fw-medium">${item.code}</td>
-            <td>${item.name}</td>
-            <td>${item.qty}개</td>
-            <td class="fw-medium">${subtotal}</td>
-          </tr>
-        `;
+      <tr>
+        <td class="fw-medium">${item.code}</td>
+        <td>${item.name}</td>
+        <td>${item.qty}개</td>
+        <td class="fw-medium">${sub}</td>
+      </tr>`;
   }).join('');
 
-  modalTotalPrice.textContent = order.totalPrice;
-  modalStatusSelect.value = order.status;
+  modalTotalPrice.textContent = o.totalPrice;
+  modalStatusSelect.value = o.status;
   orderModal.classList.add('show');
 }
 
@@ -241,36 +216,36 @@ function closeModal() {
 // 12) 상태 변경
 function updateOrderStatus() {
   const newStatus = modalStatusSelect.value;
-  const orderId = modalOrderId.textContent;
-  const order = orders.find(o => o.id === orderId);
-
-  if (order) {
-    order.status = newStatus;
-    filterOrders(); // 테이블 업데이트
+  const id = modalOrderId.textContent;
+  const o = orders.find(x => x.id === id);
+  if (o) {
+    o.status = newStatus;
+    filterOrders();
     closeModal();
-
-    // 성공 메시지 (간단한 알림)
-    showNotification(`주문 ${orderId}의 상태가 '${newStatus}'로 변경되었습니다.`);
+    showNotification(`주문 ${id}의 상태가 '${newStatus}'로 변경되었습니다.`, 'success');
   }
 }
 
 // 13) 알림 표시
-function showNotification(message) {
-  const notification = document.createElement('div');
-  notification.className = 'alert alert-success position-fixed';
-  notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
-  notification.innerHTML = `
-        <i class="fas fa-check-circle me-2"></i>${message}
-        <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
-      `;
+function showNotification(message, type = 'success') {
+  const alertClass = type === 'warning' ? 'alert-warning' : 'alert-success';
+  const iconClass = type === 'warning'
+    ? 'fas fa-exclamation-triangle'
+    : 'fas fa-check-circle';
 
-  document.body.appendChild(notification);
+  const n = document.createElement('div');
+  n.className = `alert ${alertClass} position-fixed alert-dismissible`;
+  n.style.cssText = 'top:20px; right:20px; z-index:9999; min-width:300px; box-shadow:0 4px 6px rgba(0,0,0,0.1);';
+  n.innerHTML = `
+    <i class="${iconClass} me-2"></i>${message}
+    <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+  `;
+  document.body.appendChild(n);
 
-  // 3초 후 자동 제거
   setTimeout(() => {
-    if (notification.parentElement) {
-      notification.remove();
-    }
+    n.style.opacity = '0';
+    n.style.transform = 'translateX(100%)';
+    setTimeout(() => n.remove(), 300);
   }, 3000);
 }
 
@@ -279,45 +254,35 @@ function exportCSV() {
   const headers = ['주문번호', '주문일시', '고객명', '상품수', '총액', '상태'];
   const rows = [headers.join(',')];
 
-  orders.forEach(order => {
-    const itemCount = order.items.reduce((sum, item) => sum + item.qty, 0);
-    const totalAmount = order.items.reduce((sum, item) => sum + (item.qty * item.price), 0);
-
-    const row = [
-      order.id,
-      `"${order.date}"`,
-      `"${order.customer}"`,
-      itemCount,
-      totalAmount,
-      order.status
-    ];
-
-    rows.push(row.join(','));
+  orders.forEach(o => {
+    const count = o.items.reduce((s, i) => s + i.qty, 0);
+    const total = o.items.reduce((s, i) => s + i.qty * i.price, 0);
+    rows.push([
+      o.id,
+      `"${o.date}"`,
+      `"${o.customer}"`,
+      count,
+      total,
+      o.status
+    ].join(','));
   });
 
-  const csvContent = rows.join('\n');
-  const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+  const blob = new Blob(['\uFEFF' + rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
-
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `orders_export_${new Date().toISOString().slice(0, 10)}.csv`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `orders_export_${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
   URL.revokeObjectURL(url);
-
-  showNotification('CSV 파일이 다운로드되었습니다.');
+  showNotification('CSV 파일이 다운로드되었습니다.', 'success');
 }
 
 // 15) 전체 선택/해제
 function handleSelectAll() {
-  const checkboxes = document.querySelectorAll('.order-checkbox');
-  const isChecked = selectAllBtn.checked;
-
-  checkboxes.forEach(checkbox => {
-    checkbox.checked = isChecked;
-  });
+  document.querySelectorAll('.order-checkbox')
+    .forEach(cb => cb.checked = selectAllBtn.checked);
 }
 
 // 16) 모바일 메뉴 토글
@@ -325,53 +290,36 @@ function toggleMobileMenu() {
   sidebar.classList.toggle('show');
 }
 
-// 17) 이벤트 리스너 설정
-document.addEventListener('DOMContentLoaded', function () {
-  // 초기 렌더링
+// 17) 이벤트 리스너
+document.addEventListener('DOMContentLoaded', () => {
   renderOrders();
 
-  // 검색 및 필터링
   searchInput.addEventListener('input', filterOrders);
   statusFilter.addEventListener('change', filterOrders);
 
-  // 정렬 이벤트
-  document.querySelectorAll('th[data-sort]').forEach(header => {
-    header.addEventListener('click', function () {
-      const field = this.getAttribute('data-sort');
-      sortOrders(field);
-    });
+  document.querySelectorAll('th[data-sort]').forEach(h => {
+    h.addEventListener('click', () => sortOrders(h.getAttribute('data-sort')));
   });
 
-  // 전체 선택
   selectAllBtn.addEventListener('change', handleSelectAll);
 
-  // 모달 이벤트
   closeOrderModal.addEventListener('click', closeModal);
   modalCloseBtn.addEventListener('click', closeModal);
   modalUpdateBtn.addEventListener('click', updateOrderStatus);
 
-  // 모달 외부 클릭 시 닫기
-  orderModal.addEventListener('click', function (e) {
-    if (e.target === orderModal) {
-      closeModal();
-    }
+  orderModal.addEventListener('click', e => {
+    if (e.target === orderModal) closeModal();
   });
-
-  // ESC 키로 모달 닫기
-  document.addEventListener('keydown', function (e) {
+  document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && orderModal.classList.contains('show')) {
       closeModal();
     }
   });
 
-  // CSV 내보내기
   exportBtn.addEventListener('click', exportCSV);
 
-  // 모바일 메뉴
   mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-
-  // 사이드바 외부 클릭 시 닫기 (모바일)
-  document.addEventListener('click', function (e) {
+  document.addEventListener('click', e => {
     if (window.innerWidth <= 768 &&
       sidebar.classList.contains('show') &&
       !sidebar.contains(e.target) &&
@@ -379,96 +327,47 @@ document.addEventListener('DOMContentLoaded', function () {
       sidebar.classList.remove('show');
     }
   });
-
-  // 창 크기 변경 시 사이드바 상태 조정
-  window.addEventListener('resize', function () {
-    if (window.innerWidth > 768) {
-      sidebar.classList.remove('show');
-    }
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) sidebar.classList.remove('show');
   });
 });
 
-// 18) 전역 함수로 노출 (모달 열기용)
+// 18) 전역으로 노출
 window.openOrderModal = openOrderModal;
 
-// 19) 추가 유틸리티 함수들
-
-// 새 주문 추가 (데모용)
+// 19) 추가 유틸 (예: addNewOrder, bulkUpdateStatus, getOrderStats)
 function addNewOrder() {
-  const newOrder = generateRandomOrder();
-  orders.unshift(newOrder); // 맨 앞에 추가
+  const o = generateRandomOrder();
+  orders.unshift(o);
   filterOrders();
-  showNotification('새 주문이 추가되었습니다.');
+  showNotification('새 주문이 추가되었습니다.', 'success');
 }
 
-// 선택된 주문들 일괄 처리 (데모용)
 function bulkUpdateStatus(newStatus) {
-  const checkedBoxes = document.querySelectorAll('.order-checkbox:checked');
-  const orderIds = Array.from(checkedBoxes).map(cb => cb.getAttribute('data-id'));
-
-  if (orderIds.length === 0) {
+  const ids = Array.from(document.querySelectorAll('.order-checkbox:checked'))
+    .map(cb => cb.getAttribute('data-id'));
+  if (!ids.length) {
     showNotification('선택된 주문이 없습니다.', 'warning');
     return;
   }
-
-  orderIds.forEach(orderId => {
-    const order = orders.find(o => o.id === orderId);
-    if (order) {
-      order.status = newStatus;
-    }
+  ids.forEach(id => {
+    const o = orders.find(x => x.id === id);
+    if (o) o.status = newStatus;
   });
-
   filterOrders();
   selectAllBtn.checked = false;
-  showNotification(`${orderIds.length}개 주문의 상태가 '${newStatus}'로 변경되었습니다.`);
+  showNotification(`${ids.length}개 주문 상태를 '${newStatus}'로 변경했습니다.`, 'success');
 }
 
-// 알림 타입별 스타일
-function showNotification(message, type = 'success') {
-  const alertClass = type === 'warning' ? 'alert-warning' : 'alert-success';
-  const iconClass = type === 'warning' ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle';
-
-  const notification = document.createElement('div');
-  notification.className = `alert ${alertClass} position-fixed alert-dismissible`;
-  notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);';
-  notification.innerHTML = `
-        <i class="${iconClass} me-2"></i>${message}
-        <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
-      `;
-
-  document.body.appendChild(notification);
-
-  // 자동 제거
-  setTimeout(() => {
-    if (notification.parentElement) {
-      notification.style.opacity = '0';
-      notification.style.transform = 'translateX(100%)';
-      setTimeout(() => notification.remove(), 300);
-    }
-  }, 3000);
-}
-
-// 통계 정보 계산
 function getOrderStats() {
-  const stats = {
+  return {
     total: orders.length,
-    pending: orders.filter(o => o.status === '접수').length,
-    processing: orders.filter(o => o.status === '처리중').length,
-    completed: orders.filter(o => o.status === '완료').length,
-    cancelled: orders.filter(o => o.status === '취소').length,
+    접수: orders.filter(o => o.status === '접수').length,
+    처리중: orders.filter(o => o.status === '처리중').length,
+    완료: orders.filter(o => o.status === '완료').length,
+    취소: orders.filter(o => o.status === '취소').length,
     totalRevenue: orders
       .filter(o => o.status === '완료')
-      .reduce((sum, o) => sum + o.items.reduce((s, i) => s + (i.qty * i.price), 0), 0)
+      .reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.qty * i.price, 0), 0)
   };
-
-  return stats;
 }
-
-// 개발자 도구용 헬퍼 함수들
-window.orderManager = {
-  orders,
-  addNewOrder,
-  bulkUpdateStatus,
-  getOrderStats,
-  generateRandomOrder
-};
