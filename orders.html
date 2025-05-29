@@ -57,15 +57,15 @@
     <!-- 본문 -->
     <main class="main-content container py-4">
       <!-- 컨트롤바 -->
-      <div class="controls">
+      <div class="controls d-flex gap-2 align-items-center mb-3">
         <!-- 검색창 -->
-        <div class="search-box">
+        <div class="search-box position-relative flex-grow-1">
           <input id="searchInput" type="text" class="form-control" placeholder="주문번호 또는 고객명 검색..." />
           <i class="fas fa-search search-icon"></i>
         </div>
 
         <!-- 상태 필터 -->
-        <select id="statusFilter" class="form-select filter-select">
+        <select id="statusFilter" class="form-select filter-select w-auto">
           <option value="전체">모든 상태</option>
           <option value="접수">접수</option>
           <option value="처리중">처리중</option>
@@ -74,7 +74,7 @@
         </select>
 
         <!-- CSV 내보내기 -->
-        <button id="exportBtn" class="btn btn-success btn-export">
+        <button id="exportBtn" class="btn btn-success">
           <i class="fas fa-download me-1"></i>CSV 내보내기
         </button>
       </div>
@@ -100,7 +100,7 @@
         </table>
       </div>
 
-      <!-- 페이징 -->
+      <!-- 페이징 (추후 구현) -->
       <nav aria-label="페이지네비게이션">
         <ul id="pagination" class="pagination justify-content-center mt-3"></ul>
       </nav>
@@ -117,7 +117,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="mb-3 d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between mb-3">
           <span id="modalOrderDate" class="text-muted"></span>
           <span id="modalOrderStatus" class="badge"></span>
         </div>
@@ -182,12 +182,11 @@
     </div>
   </div>
 
-  <!-- 스크립트 -->
+  <!-- 스크립트 로딩 순서 주의 -->
   <script src="bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script>
-    <!-- jquery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="JS/common.js"></script>
-  <script src="JS/Orders.js"></script>
+  <script src="JS/Orders.js" defer></script>
 </body>
 
 </html>

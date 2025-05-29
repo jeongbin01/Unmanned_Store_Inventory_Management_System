@@ -1,4 +1,3 @@
-// js/Orders.js
 'use strict';
 
 // 1) 상품 카탈로그
@@ -44,7 +43,7 @@ function generateRandomOrder() {
   d.setDate(getRandomInt(1, 28));
   d.setHours(getRandomInt(0, 23), getRandomInt(0, 59));
 
-  const total = items.reduce((sum, item) => sum + (item.qty * item.price), 0);
+  const total = items.reduce((sum, item) => sum + item.qty * item.price, 0);
 
   return {
     id: `ORD-2025-${getRandomInt(1000, 9999)}`,
@@ -57,7 +56,7 @@ function generateRandomOrder() {
   };
 }
 
-// 5) 초기 주문 데이터 생성
+// 5) 초기 데이터
 const initialOrders = Array.from({ length: 20 }, generateRandomOrder);
 let orders = initialOrders.slice();
 let filteredOrders = orders.slice();
@@ -72,7 +71,7 @@ const selectAllBtn = document.getElementById('selectAll');
 const mobileMenuBtn = document.getElementById('mobileMenuBtn');
 const sidebar = document.getElementById('sidebar');
 
-// 모달 관련
+// modal elements
 const orderModal = document.getElementById('orderModal');
 const closeOrderModal = document.getElementById('closeOrderModal');
 const modalOrderId = document.getElementById('modalOrderId');
@@ -95,14 +94,14 @@ function renderOrders() {
   }
 
   ordersTableBody.innerHTML = filteredOrders.map(order => {
-    const itemCount = order.items.reduce((sum, i) => sum + i.qty, 0);
+    const count = order.items.reduce((s, i) => s + i.qty, 0);
     return `
       <tr>
         <td><input type="checkbox" class="order-checkbox" data-id="${order.id}"></td>
         <td class="fw-medium">${order.id}</td>
         <td>${order.date}</td>
         <td>${order.customer}</td>
-        <td>${itemCount}개</td>
+        <td>${count}개</td>
         <td class="fw-medium">${order.totalPrice}</td>
         <td><span class="badge status-${order.status}">${order.status}</span></td>
         <td>
@@ -163,9 +162,8 @@ function applySorting() {
         break;
       case 'status': A = a.status; B = b.status; break;
     }
-    if (A < B) return currentSort.direction === 'asc' ? -1 : 1;
-    if (A > B) return currentSort.direction === 'asc' ? 1 : -1;
-    return 0;
+    return currentSort.direction === 'asc' ? (A < B ? -1 : A > B ? 1 : 0)
+      : (A > B ? -1 : A < B ? 1 : 0);
   });
 }
 
@@ -226,7 +224,7 @@ function updateOrderStatus() {
   }
 }
 
-// 13) 알림 표시
+// 13) 알림
 function showNotification(message, type = 'success') {
   const alertClass = type === 'warning' ? 'alert-warning' : 'alert-success';
   const iconClass = type === 'warning'
@@ -276,6 +274,7 @@ function exportCSV() {
   a.click();
   a.remove();
   URL.revokeObjectURL(url);
+
   showNotification('CSV 파일이 다운로드되었습니다.', 'success');
 }
 
@@ -290,7 +289,7 @@ function toggleMobileMenu() {
   sidebar.classList.toggle('show');
 }
 
-// 17) 이벤트 리스너
+// 17) 이벤트 등록
 document.addEventListener('DOMContentLoaded', () => {
   renderOrders();
 
@@ -298,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
   statusFilter.addEventListener('change', filterOrders);
 
   document.querySelectorAll('th[data-sort]').forEach(h => {
-    h.addEventListener('click', () => sortOrders(h.getAttribute('data-sort')));
+    h.addEventListener('click', () => sortOrders(h.dataset.sort));
   });
 
   selectAllBtn.addEventListener('change', handleSelectAll);
@@ -332,10 +331,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// 18) 전역으로 노출
+// 18) 전역 노출 (모달 열기용)
 window.openOrderModal = openOrderModal;
 
-// 19) 추가 유틸 (예: addNewOrder, bulkUpdateStatus, getOrderStats)
+// 19) 추가 헬퍼
 function addNewOrder() {
   const o = generateRandomOrder();
   orders.unshift(o);
@@ -345,7 +344,7 @@ function addNewOrder() {
 
 function bulkUpdateStatus(newStatus) {
   const ids = Array.from(document.querySelectorAll('.order-checkbox:checked'))
-    .map(cb => cb.getAttribute('data-id'));
+    .map(cb => cb.dataset.id);
   if (!ids.length) {
     showNotification('선택된 주문이 없습니다.', 'warning');
     return;
