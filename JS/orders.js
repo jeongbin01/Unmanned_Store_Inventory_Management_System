@@ -1,5 +1,3 @@
-'use strict';
-
 // 1) 상품 카탈로그
 const productCatalog = [
   { code: 'P1001', name: '삼성 갤럭시 S24', price: 1200000 },
